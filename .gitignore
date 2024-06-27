@@ -1,0 +1,7 @@
+results/
+.snakemake/
+.conda/
+.cache/
+input_files/
+dockerfile
+resources/

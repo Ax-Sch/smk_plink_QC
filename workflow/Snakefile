@@ -1,0 +1,654 @@
+configfile: "config/config.yaml"
+import os
+
+
+
+rule all:
+	input:
+		"results/PC_plots/all_chr.pgen",
+		
+
+rule prepare_correct_x:
+	input:
+		fam="results/pre_imputation_QC/prepared.fam",
+	output:
+		mergex="results/pre_imputation_QC/prepared_xmerge.fam",
+		splitx="results/pre_imputation_QC/prepared_xsplit.fam",
+		XhetMiss="results/pre_imputation_QC/prepared_xhetMiss.fam",
+	params:
+		plink_in=lambda wildcards, input: input["fam"][:-4],
+		mergex=lambda wildcards, output: output["mergex"][:-4],
+		splitx=lambda wildcards, output: output["splitx"][:-4],
+		XhetMiss=lambda wildcards, output: output["XhetMiss"][:-4],
+	conda: "envs/bcftools_plink_R.yaml"
+	shell:
+		"""
+		plink \
+		--bfile {params.plink_in} \
+		--merge-x \ 
+		--make-bed \
+		--out {params.mergex}
+		
+		plink \
+		--bfile {params.mergex} \
+		--split-x b37 \
+		--make-bed \
+		--out {params.splitx}
+		
+		plink \
+		--bfile {params.splitx} \
+		--set-hh-missing \
+		--make-bed \
+		--out {params.XhetMiss}
+
+		"""
+
+
+rule genotyping05:
+	input:
+		fam="results/pre_imputation_QC/prepared_xhetMiss.fam",
+	output:
+		fam="results/pre_imputation_QC/Geno05.fam",
+	conda: "envs/bcftools_plink_R.yaml"
+	shell:
+		"""
+		infile={input.fam}
+		outfile={output.fam}
+
+		plink \
+		--bfile ${{infile::-4}} \
+		--geno 0.05 \
+		--make-bed \
+		--out ${{outfile::-4}}
+		"""
+
+rule SampleCallrate98_sex: 
+	input:
+		"results/pre_imputation_QC/Geno05.fam"
+	output:
+		"results/pre_imputation_QC/Geno05_SCRSex.fam"
+	params:
+		sample_filter= config["sample_filter"]
+	conda: "envs/bcftools_plink_R.yaml"
+	shell:
+		"""
+		infile={input}
+		outfile={output}
+		plink \
+		--bfile ${{infile::-4}} \
+		--mind 0.02 \	 --mind {params.sample_filter}
+		--check-sex \
+		--make-bed \
+		--out ${{outfile::-4}}
+		
+		echo "sex problems:" 
+		grep -P "PROBLEM|STATUS" "${{outfile::-4}}".sexcheck
+		"""
+
+
+
+rule get_heterozygosity:
+	input:
+		"results/pre_imputation_QC/Geno05_SCRSex.fam"
+	output:
+		cases="results/pre_imputation_QC/Geno05_SCRSex_cases.het",
+		conts="results/pre_imputation_QC/Geno05_SCRSex_controls.het",
+	params:
+		infile=lambda wildcards, input: input[0][:-4],
+		cases=lambda wildcards, output: output["cases"][:-4],
+		conts=lambda wildcards, output: output["conts"][:-4],
+	conda: "envs/bcftools_plink_R.yaml"
+	shell:	
+		"""
+		plink \
+		--bfile {params.infile} \
+		--het \
+		--filter-cases \
+		--out {params.cases}
+
+		plink \
+		--bfile {params.infile} \
+		--het \
+		--filter-controls \
+		--out {params.conts}
+		"""
+
+rule check_heterozygosity: 
+	input:
+		cases="results/pre_imputation_QC/Geno05_SCRSex_cases.het",
+		conts="results/pre_imputation_QC/Geno05_SCRSex_controls.het",
+	output:
+		exclude_list="results/pre_imputation_QC/Geno05_CRSex_het_exclude.txt",
+	conda: "base"
+	shell:
+		"""
+		Rscript scripts/check_het.R \
+		 --cases {input.cases} \
+		 --conts {input.conts} \
+		 --outfile {output} 
+		 """
+
+
+rule VariantCallrate98:
+	input:
+		"results/pre_imputation_QC/Geno05_SCRSex.fam"
+	output:
+		"results/pre_imputation_QC/Geno05_SCRSex_VCR.fam"
+	params:
+		infile=lambda wildcards, input: input[0][:-4],
+		outfile=lambda wildcards, output: output[0][:-4],
+	conda: "envs/bcftools_plink_R.yaml"
+	shell:
+		"""
+		plink \
+		--bfile {params.infile} \
+		--geno 0.02 \
+		--make-bed \
+		--out {params.outfile}
+		"""
+
+rule get_MissDiff_HWE:
+	input:
+		"results/pre_imputation_QC/Geno05_SCRSex_VCR.fam"
+	output:
+		"results/pre_imputation_QC/Geno05_SCRSex_VCR_case.lmiss",
+		"results/pre_imputation_QC/Geno05_SCRSex_VCR_con.lmiss",
+		"results/pre_imputation_QC/Geno05_SCRSex_VCR_all.hwe",
+		"results/pre_imputation_QC/Geno05_SCRSex_VCR_female.hwe",
+		
+	params:
+		infile=lambda wildcards, input: input[0][:-4],
+	conda: "envs/bcftools_plink_R.yaml"
+	shell:
+		"""
+		plink \
+		--bfile {params.infile} \
+		--filter-cases \
+		--missing \
+		--out {params.infile}_case
+
+		plink \
+		--bfile {params.infile} \
+		--filter-controls \
+		--missing \
+		--out {params.infile}_con
+
+		plink \
+		--bfile {params.infile} \
+		--hardy \
+		--out {params.infile}_all
+
+		plink \
+		--bfile {params.infile} \
+		--hardy \
+		--chr 23 \
+		--filter-females \
+		--out {params.infile}_female
+		"""	
+		
+
+rule check_MissDiff_HWE:
+	input:	
+		miss_case="results/pre_imputation_QC/Geno05_SCRSex_VCR_case.lmiss",
+		miss_cont="results/pre_imputation_QC/Geno05_SCRSex_VCR_con.lmiss",
+		hwe_all="results/pre_imputation_QC/Geno05_SCRSex_VCR_all.hwe",
+		hwe_female="results/pre_imputation_QC/Geno05_SCRSex_VCR_female.hwe",
+	output:
+		"results/pre_imputation_QC/remove_missingness_hwe.txt",
+	conda: "base"
+	shell:
+		"""
+		Rscript scripts/check_miss_hwe.R \
+		 --miss_case {input.miss_case} \
+		 --miss_cont {input.miss_cont} \
+		 --hwe_all {input.hwe_all} \
+		 --hwe_female {input.hwe_female} \
+		 --outfile {output} 
+		 """
+		
+rule filter_MissDiff_HWE:	
+	input:
+		fam="results/pre_imputation_QC/Geno05_SCRSex_VCR.fam",
+		miss_list="results/pre_imputation_QC/remove_missingness_hwe.txt",
+	output:
+		"results/pre_imputation_QC/Geno05_SCRSex_VCR_MiHwe.fam"
+	params:
+		infile=lambda wildcards, input: input[0][:-4],
+		outfile=lambda wildcards, output: output[0][:-4],
+	conda: "envs/bcftools_plink_R.yaml"
+	shell:
+		"""
+		plink2 \
+		--bfile {params.infile} \
+		--exclude {input.miss_list} \ 
+		--set-all-var-ids @:#:\$r:\$a \ 
+		--make-bed \
+		--out {params.outfile}
+		"""
+
+
+rule download_1000G_sample_info:
+	output:
+		#"GCA_000001405.15_GRCh38_no_alt_analysis_set.fna",
+		"results/PCA/20130606_g1k.ped" # contig = chr1, ...
+	resources: cpus=1, mem_mb=3000, time_job=720
+	params:
+		partition='batch'
+	shell:
+		"""
+		cd results/PCA/
+		wget -nc ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/working/20130606_sample_info/20130606_g1k.ped #downloading data from a specific url(no clobber)
+		"""
+
+
+rule prepare_1000G_for_ancestry_PCA: 
+	input:
+		bcf1000G=config["location_1000G"]+"ALL.chr{contig}.phase3_shapeit2_mvncall_integrated_v5b.20130502.genotypes.bcf",
+		fasta=config["fasta"], 
+		fam="results/pre_imputation_QC/Geno05_SCRSex_VCR_MiHwe.fam",
+	output:
+		vcf="results/1000G/1000G_chr{contig}.bcf",
+		variant_list="results/1000G/1000G_chr{contig}.vars",
+		bed2="results/1000G/1000G_chr{contig}_pruned.bed"
+	resources: cpus=1, mem_mb=18000, time_job=720
+	conda: "envs/bcftools_plink_R.yaml"
+	params:
+		plink_in=lambda wildcards, input: input["fam"][:-4],
+		partition='batch',
+		bed1="results/1000G/1000G_chr{contig}",
+		bed2="results/1000G/1000G_chr{contig}_pruned"
+	shell:
+		"""
+		
+		if bcftools view -q 0.05:minor "{input.bcf1000G}" | \
+		bcftools norm -m-any --check-ref w -f "{input.fasta}" | \
+		bcftools annotate -x ID -I +'%CHROM:%POS:%REF:%ALT' | \
+		bcftools norm -Ob --rm-dup both \
+		> {output.vcf} ; then
+		echo "no error"
+		fi
+		
+
+		bcftools index {output.vcf}
+		
+		plink --noweb \
+		--bcf {output.vcf} \
+		--keep-allele-order \
+		--vcf-idspace-to _ \
+		--allow-extra-chr 0 \
+		--split-x b37 no-fail \
+		--make-bed \
+		--out {params.bed1}
+		
+		cut -f2 {params.plink_in}.bim > {output.variant_list}
+		
+		plink --noweb \
+		--bfile {params.bed1} \
+		--extract {output.variant_list} \
+		--maf 0.10 --indep 50 5 1.5 \
+		--make-bed \
+		--out {params.bed2}
+		"""
+		
+
+rule merge_data_w_1000G_run_PCA:	
+	input:
+		_1000G_data=expand("results/1000G/1000G_chr{contig}_pruned.bed", contig=config["contigs_wo_X"]), #### !!!!! 
+		fam="results/pre_imputation_QC/Geno05_SCRSex_VCR_MiHwe.fam",
+		ped_file_1000G="results/PCA/20130606_g1k.ped"
+	output:
+		merge_list="results/1000G/merge_list.txt",
+		bim_pca="results/PCA/MergeFullForPCA.bim",
+		populations="results/PCA/populations.txt"
+	resources: cpus=1, mem_mb=18000, time_job=720
+	params:
+		partition='batch',
+		plink_in=lambda wildcards, input: input["fam"][:-4],
+	conda: "envs/bcftools_plink_R.yaml"
+	shell:
+
+		"""
+		mkdir -p results/PCA
+		
+		echo {input._1000G_data} | tr " " "\\n" | sed 's/.bed//g' > {output.merge_list}
+		plink --merge-list {output.merge_list} --out results/1000G/Merged   
+		awk '{{ print $2 }}' results/1000G/Merged.bim > results/1000G/MergeVariants.txt
+		
+		plink --bfile {params.plink_in} \
+		 --extract results/1000G/MergeVariants.txt \
+		 --make-bed \
+		 --out results/1000G/cohort
+		 
+		printf "results/1000G/Merged\\nresults/1000G/cohort" > results/1000G/ForMergeFull.list
+		
+		plink --merge-list results/1000G/ForMergeFull.list --out results/PCA/MergeFullForPCA
+		 
+		awk '{{ print $1,$2 }}' results/1000G/Merged.fam | awk '$(NF+1) = "1000G"' > results/PCA/clusters.txt
+		awk '{{ print $1,$2 }}' results/1000G/cohort.fam | awk '$(NF+1) = "Cohort"' >> results/PCA/clusters.txt
+		
+		plink --bfile results/PCA/MergeFullForPCA \
+		 --pca-cluster-names 1000G \
+		 --pca \
+		 --within results/PCA/clusters.txt
+		
+		mv plink.* results/PCA/
+		cp -f scripts/populations_PCA.R results/PCA/populations_PCA.R
+		cd results/PCA/
+		Rscript -e 'library(rmarkdown); rmarkdown::render("populations_PCA.R", "html_document")'
+
+		"""
+
+
+rule filter_plink_for_ancestry:
+	input:
+		fam="results/pre_imputation_QC/Geno05_SCRSex_VCR_MiHwe.fam",
+		non_europ_exclude="resources/exclude_ancestry_ids.txt"
+	output:
+		keep_fam="results/PCA/non_europ_exclude.fam",
+		fam="results/PCA/cohort_eur.fam",
+	params:
+		plink_in=lambda wildcards, input: input["fam"][:-4],
+		plink_out=lambda wildcards, output: output["fam"][:-4],
+	conda: "envs/bcftools_plink_R.yaml"
+	shell:
+		"""
+		grep -vf {input.non_europ_exclude} {input.fam} > {output.keep_fam}
+
+		plink2 \
+		--bfile {params.plink_in} \
+		--keep {output.keep_fam} \
+		--require-pheno \	
+		--make-bed \
+		--out {params.plink_out}
+		
+		"""
+
+rule kinship_analysis:
+	input:
+		fam="results/PCA/cohort_eur.fam",
+	output:		#primary/secondary kinship coefficients
+		kinship_file1="results/kinship/Geno05_CR_sex_snp_qc_snpqc2_EUR.kin",
+		kinship_file2="results/kinship/Geno05_CR_sex_snp_qc_snpqc2_EUR.kin0",
+	params:
+		plink_in=lambda wildcards, input: input["fam"][:-4],
+		out_folder="results/kinship",
+		prefix=lambda wildcards, output: output["kinship_file1"][:-4],
+	conda: "envs/king.yaml"
+	shell:
+		"""
+		mkdir -p {params.out_folder}
+		king \ 
+		-b {params.plink_in}.bed \
+		--kinship \
+		--prefix {params.prefix}
+		"""
+
+rule kinship_analysis_R:
+	input:
+		fam="results/PCA/cohort_eur.fam",
+		kinship_file1="results/kinship/Geno05_CR_sex_snp_qc_snpqc2_EUR.kin",
+		kinship_file2="results/kinship/Geno05_CR_sex_snp_qc_snpqc2_EUR.kin0",
+	output:
+		kinship_keep="results/kinship/keep_ids.fam",
+	conda: "base"
+	shell:
+		"""
+		Rscript scripts/kinship_analysis.R \
+		--fam_file {input.fam} \
+		--kinship_file1 {input.kinship_file1} \
+		--kinship_file2 {input.kinship_file2} \
+		--outfile {output.kinship_keep} 
+		"""
+
+rule remove_relateds:
+	input:
+		fam="results/PCA/cohort_eur.fam",
+		kinship_keep="results/kinship/keep_ids.fam",
+	output:
+		fam="results/kinship/cohort_eur_unrelated.fam",
+	params:
+		plink_in=lambda wildcards, input: input["fam"][:-4],
+		plink_out=lambda wildcards, output: output["fam"][:-4],
+	conda: "envs/bcftools_plink_R.yaml"
+	shell:
+		"""
+		plink2 \
+		--bfile {params.plink_in} \
+		--keep {input.kinship_keep} \
+		--require-pheno \
+		--make-bed \
+		--out {params.plink_out}
+		
+		"""
+
+rule kinship_check:
+	input:
+		fam="results/kinship/cohort_eur_unrelated.fam",
+	output:
+		kinship_file1="results/kinship/last_check_kinship.kin",
+		kinship_file2="results/kinship/last_check_kinship.kin0",
+		kinship_keep="results/kinship/last_check_kinship_keep.fam",
+	params:
+		plink_in=lambda wildcards, input: input["fam"][:-4],
+		out_folder="results/kinship",
+		prefix=lambda wildcards, output: output["kinship_file1"][:-4],
+	conda: "envs/king.yaml"
+	shell:
+		"""
+		king \
+		-b {params.plink_in}.bed \
+		--kinship \
+		--prefix {params.prefix}
+		
+		Rscript scripts/kinship_analysis.R \
+		--fam_file {input.fam} \
+		--kinship_file1 {output.kinship_file1} \
+		--kinship_file2 {output.kinship_file2} \
+		--outfile {output.kinship_keep}
+		
+		echo "length of original fam file:"
+		cat {input.fam} | sort -u | wc -l 
+		
+		echo "length of pruned fam file:"
+		cat {output.kinship_keep} | sort -u | wc -l 
+
+		"""
+
+
+
+
+
+
+################################################
+################################################
+
+
+rule make_pgen_files:
+	input:
+		vcf="resources/TopMed_imputation/chr{contig}.dose.vcf.gz",
+		fam="results/kinship/cohort_eur_unrelated.fam"
+	output:
+		pgen="results/bgen_conversion/chr{contig}.pgen",
+		psam="results/bgen_conversion/chr{contig}.psam",
+		pvar="results/bgen_conversion/chr{contig}.pvar",
+	params:
+		plink_out=lambda wildcards, output: output["pgen"][:-5],
+	conda: "envs/bcftools_plink_R.yaml"
+	shell:
+		"""
+		plink2 \
+		--vcf {input.vcf} dosage=GP-force \
+		--fam {input.fam} \
+		--make-pgen \
+		--threads 7 \
+		--out {params.plink_out}
+		"""
+
+
+rule make_sample_file:
+	input:
+		vcf="resources/TopMed_imputation/chrX.dose.vcf.gz",
+		fam="results/kinship/cohort_eur_unrelated.fam"
+	output:
+		sample="results/bgen_conversion/chrXplink.sample",
+		bgen="results/bgen_conversion/chrXplink.bgen",
+	params:
+		plink_out=lambda wildcards, output: output["sample"][:-7],
+	conda: "envs/bcftools_plink_R.yaml"
+	shell:
+		"""
+		plink2 \
+		--vcf {input.vcf} dosage=HDS \
+		--fam {input.fam} \
+		--export oxford bgen-1.2 bits=8 \
+		--threads 7 \
+		--out {params.plink_out}
+		"""
+
+rule prepare_genotyped_data_for_PCA:
+	input:
+		fam="results/kinship/cohort_eur_unrelated.fam"
+	output:
+		fam="results/covar_PCA/genotyped_autosomal_pruned.fam",
+	params:
+		plink_in=lambda wildcards, input: input["fam"][:-4],
+		plink_out=lambda wildcards, output: output["fam"][:-4],
+	conda: "envs/bcftools_plink_R.yaml"
+	shell:
+		"""
+		# 6d. for PCA prune data, use genotyped file
+		plink2 \
+		--bfile {params.plink_in} \
+		--indep-pairwise 1000 50 0.2 \
+		--chr 1-22 \
+		--threads 7 \
+		--out {params.plink_out}
+
+		plink2 \
+		--bfile {params.plink_in} \
+		--extract {params.plink_out}.prune.in \
+		--make-bed \
+		--threads 7 \
+		--out {params.plink_out}
+
+		"""
+
+rule do_PCA:
+	input:
+		fam="results/covar_PCA/genotyped_autosomal_pruned.fam",
+	output:
+		pc="results/covar_PCA/pcs.txt",
+		pve="results/covar_PCA/pves.txt",
+		vec="results/covar_PCA/vecs.txt",
+		val="results/covar_PCA/vals.txt",
+	params:
+		plink_in=lambda wildcards, input: input["fam"][:-4],
+	conda: "envs/bcftools_plink_R.yaml"
+	shell:
+		"""
+		tools/flashpca_x86-64 \
+		--bed {params.plink_in}.bed \
+		--bim {params.plink_in}.bim \
+		--fam {input.fam} \
+		-d 10 \
+		--outpc {output.pc} \
+		--outpve {output.pve} \
+		--outvec {output.vec} \
+		--outval {output.val}
+		"""
+
+
+rule make_pheno_cov:
+	input:
+		pc="results/covar_PCA/pcs.txt",
+		pheno_buffy="resources/pheno_age_buffy_coat.tsv",
+		pheno_longCovid="resources/pheno_age_longCovids.tsv",
+	output:
+		cov="results/pheno/cov.cov",
+		pheno="results/pheno/pheno.pheno"
+	shell:
+		"""
+		Rscript \
+		 scripts/make_pheno_cov.R \
+		 --pcs {input.pc} \
+		 --pheno_buffy {input.pheno_buffy} \
+		 --pheno_longCovid {input.pheno_longCovid} \
+		 --cov {output.cov} \
+		 --pheno {output.pheno}
+
+		"""
+
+
+
+rule regenie_step2SPAnoPRS:
+	input:
+		cov="results/pheno/cov.cov",
+		pheno="results/pheno/pheno.pheno",
+		#step1="results/GWAS/STEP1_pred_corr.list",
+		step2_pgen="results/bgen_conversion/chr{chr}.pgen",
+		#step2_sample="results/bgen_conversion/chrXplink.sample"
+	output:
+		step2_NQ2="results/GWAS/SPAnoPRSSTEP2_{chr}_NQ2_3.regenie.gz",
+		step2_NQ1="results/GWAS/SPAnoPRSSTEP2_{chr}_NQ1_3.regenie.gz",
+		step2_NQ2_ID="results/GWAS/SPAnoPRSSTEP2_{chr}_NQ2_3.regenie.ids",
+		step2_NQ1_ID="results/GWAS/SPAnoPRSSTEP2_{chr}_NQ1_3.regenie.ids"		
+	params:
+		step2="results/GWAS/SPAnoPRSSTEP2_{chr}",
+		plink_in=lambda wildcards, input: input["step2_pgen"][:-5],
+	conda: "envs/regenie.yaml"
+	shell:
+		"""
+		regenie \
+		--step 2 \
+		--pgen {params.plink_in} \
+		--phenoFile {input.pheno} \
+		--covarFile {input.cov} \
+		--bt \
+		--spa \
+		--write-samples \
+		--gz \
+		--ignore-pred \
+		--bsize 1000 \
+		--minMAC 10 \
+		--out {params.step2}
+		
+		"""
+
+
+
+rule merge_regenie_results:
+	input:
+		expand("results/GWAS/{spa}TEP2_{chr}_{pheno}.regenie.gz", chr=config["contigs_wo_X"] + ["X"], allow_missing=True), # + 
+	output:
+		step2="results/GWAS/{spa}TEP2_{pheno}.regenie.gz",
+	params:
+		header="results/GWAS/regenie_header_{pheno}.txt"
+	conda: "envs/bcftools_plink_R.yaml"
+	shell:
+		"""
+		if zcat {input} | head -n1 > {params.header}
+		then
+		echo "error"
+		fi
+		
+		zcat {input} | grep -v "CHROM" | \
+		cat {params.header} - | \
+		bgzip > {output}
+		"""
+
+
+
+rule generate_qq_plots:
+	input:
+		path_reg="results/GWAS/{spa}TEP2_{pheno}.regenie.gz",
+	output:
+		out="results/GWAS_QC/{spa}TEP2_{pheno}.regenie_LOG10P_manhattan.png"
+	resources: cpus=1, mem_mb=3000, time_job=720
+	params:
+		partition='batch',
+		output_string=lambda wildcards, output: output["out"][:-21],
+	conda: "envs/bcftools_plink_R.yaml"
+	shell:
+		"""
+		Rscript scripts/qqplot.R -f {input} -o {params.output_string} -c CHROM -p LOG10P -b GENPOS
+		"""
