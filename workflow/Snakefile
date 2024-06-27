@@ -20,6 +20,7 @@ rule prepare_correct_x:
 		mergex=lambda wildcards, output: output["mergex"][:-4],
 		splitx=lambda wildcards, output: output["splitx"][:-4],
 		XhetMiss=lambda wildcards, output: output["XhetMiss"][:-4],
+		hg_reference= config["hg_ref"]
 	conda: "envs/bcftools_plink_R.yaml"
 	shell:
 		"""
@@ -31,7 +32,7 @@ rule prepare_correct_x:
 		
 		plink \
 		--bfile {params.mergex} \
-		--split-x b37 \
+		--split-x {params.hg_reference} \
 		--make-bed \
 		--out {params.splitx}
 		
@@ -49,6 +50,8 @@ rule genotyping05:
 		fam="results/pre_imputation_QC/prepared_xhetMiss.fam",
 	output:
 		fam="results/pre_imputation_QC/Geno05.fam",
+	params:
+		vcr1= config["variant_CR1"]
 	conda: "envs/bcftools_plink_R.yaml"
 	shell:
 		"""
@@ -57,7 +60,7 @@ rule genotyping05:
 
 		plink \
 		--bfile ${{infile::-4}} \
-		--geno 0.05 \
+		--geno {params.vcr1} \
 		--make-bed \
 		--out ${{outfile::-4}}
 		"""
@@ -68,7 +71,7 @@ rule SampleCallrate98_sex:
 	output:
 		"results/pre_imputation_QC/Geno05_SCRSex.fam"
 	params:
-		sample_filter= config["sample_filter"]
+		scr1= config["sample_CR1"]
 	conda: "envs/bcftools_plink_R.yaml"
 	shell:
 		"""
@@ -76,7 +79,7 @@ rule SampleCallrate98_sex:
 		outfile={output}
 		plink \
 		--bfile ${{infile::-4}} \
-		--mind 0.02 \	 --mind {params.sample_filter}
+		--mind {params.scr1} \
 		--check-sex \
 		--make-bed \
 		--out ${{outfile::-4}}
@@ -137,12 +140,13 @@ rule VariantCallrate98:
 	params:
 		infile=lambda wildcards, input: input[0][:-4],
 		outfile=lambda wildcards, output: output[0][:-4],
+		vcr2= config["variant_CR2"]
 	conda: "envs/bcftools_plink_R.yaml"
 	shell:
 		"""
 		plink \
 		--bfile {params.infile} \
-		--geno 0.02 \
+		--geno {params.vcr2} \
 		--make-bed \
 		--out {params.outfile}
 		"""
@@ -257,6 +261,7 @@ rule prepare_1000G_for_ancestry_PCA:
 		partition='batch',
 		bed1="results/1000G/1000G_chr{contig}",
 		bed2="results/1000G/1000G_chr{contig}_pruned"
+		hg_reference= config["hg_ref"]
 	shell:
 		"""
 		
@@ -276,7 +281,7 @@ rule prepare_1000G_for_ancestry_PCA:
 		--keep-allele-order \
 		--vcf-idspace-to _ \
 		--allow-extra-chr 0 \
-		--split-x b37 no-fail \
+		--split-x {params.hg_reference} no-fail \
 		--make-bed \
 		--out {params.bed1}
 		
