@@ -1,33 +1,42 @@
 ---
 
- input_plink: "results/pre_imputation_QC/prepared.fam"
- location_1000G: "resources/1000G/"
- fasta: "resources/fasta/human_g1k_v37.fasta"
- contigs_wo_X:
-  - 1
-  - 2
-  - 3
-  - 4
-  - 5
-  - 6
-  - 7
-  - 8
-  - 9
-  - 10
-  - 11
-  - 12
-  - 13
-  - 14
-  - 15
-  - 16
-  - 17
-  - 18
-  - 19
-  - 20
-  - 21
-  - 22
+input_plink: "results/pre_imputation_QC/prepared.fam"
+location_1000G: "resources/1000G/"
+fasta: "resources/fasta/human_g1k_v37.fasta"
+imputed_files: "resources/trial5withparregions.vcfs/"
+contigs_wo_X:
+ - 1
+ - 2
+ - 3
+ - 4
+ - 5
+ - 6
+ - 7
+ - 8
+ - 9
+ - 10
+ - 11
+ - 12
+ - 13
+ - 14
+ - 15
+ - 16
+ - 17
+ - 18
+ - 19
+ - 20
+ - 21
+ - 22
   
-  hg_ref: b37
-  variant_CR1: 0.05
-  sample_CR1: 0.02
-  variant_CR2: 0.02
+hg_ref: b37
+variant_CR1: 0.05
+sample_CR1: 0.02
+variant_CR2: 0.02
+bcf_maf: 0.05
+pca_maf: 0.10
+pca1_window_size: 50
+pca1_window_shift: 5
+pca1_r2: 1.5
+pca2_window_size: 1000
+pca2_window_shift: 50
+pca2_r2: 0.2

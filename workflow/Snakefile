@@ -6,11 +6,11 @@ import os
 rule all:
 	input:
 		"results/PC_plots/all_chr.pgen",
-		
+
 
 rule prepare_correct_x:
 	input:
-		fam="results/pre_imputation_QC/prepared.fam",
+		fam= config["input_plink"],
 	output:
 		mergex="results/pre_imputation_QC/prepared_xmerge.fam",
 		splitx="results/pre_imputation_QC/prepared_xsplit.fam",
@@ -20,19 +20,19 @@ rule prepare_correct_x:
 		mergex=lambda wildcards, output: output["mergex"][:-4],
 		splitx=lambda wildcards, output: output["splitx"][:-4],
 		XhetMiss=lambda wildcards, output: output["XhetMiss"][:-4],
-		hg_reference= config["hg_ref"]
+		hg_reference= config["hg_ref"],
 	conda: "envs/bcftools_plink_R.yaml"
 	shell:
 		"""
 		plink \
 		--bfile {params.plink_in} \
-		--merge-x \ 
+		--merge-x \ #to merge X-chr data with the autosomal data->.bed (binary)file
 		--make-bed \
 		--out {params.mergex}
 		
 		plink \
 		--bfile {params.mergex} \
-		--split-x {params.hg_reference} \
+		--split-x b37 \
 		--make-bed \
 		--out {params.splitx}
 		
@@ -51,7 +51,7 @@ rule genotyping05:
 	output:
 		fam="results/pre_imputation_QC/Geno05.fam",
 	params:
-		vcr1= config["variant_CR1"]
+		vcr1= config["variant_CR1"],
 	conda: "envs/bcftools_plink_R.yaml"
 	shell:
 		"""
@@ -71,7 +71,7 @@ rule SampleCallrate98_sex:
 	output:
 		"results/pre_imputation_QC/Geno05_SCRSex.fam"
 	params:
-		scr1= config["sample_CR1"]
+		scr1= config["sample_CR1"],
 	conda: "envs/bcftools_plink_R.yaml"
 	shell:
 		"""
@@ -84,7 +84,7 @@ rule SampleCallrate98_sex:
 		--make-bed \
 		--out ${{outfile::-4}}
 		
-		echo "sex problems:" 
+		echo "sex problems:" #prints the text sex problems
 		grep -P "PROBLEM|STATUS" "${{outfile::-4}}".sexcheck
 		"""
 
@@ -116,7 +116,7 @@ rule get_heterozygosity:
 		--out {params.conts}
 		"""
 
-rule check_heterozygosity: 
+rule check_heterozygosity:
 	input:
 		cases="results/pre_imputation_QC/Geno05_SCRSex_cases.het",
 		conts="results/pre_imputation_QC/Geno05_SCRSex_controls.het",
@@ -126,11 +126,10 @@ rule check_heterozygosity:
 	shell:
 		"""
 		Rscript scripts/check_het.R \
-		 --cases {input.cases} \
-		 --conts {input.conts} \
-		 --outfile {output} 
-		 """
-
+		--cases {input.cases} \
+		--conts {input.conts} \
+		--outfile {output} 
+		"""
 
 rule VariantCallrate98:
 	input:
@@ -140,8 +139,9 @@ rule VariantCallrate98:
 	params:
 		infile=lambda wildcards, input: input[0][:-4],
 		outfile=lambda wildcards, output: output[0][:-4],
-		vcr2= config["variant_CR2"]
-	conda: "envs/bcftools_plink_R.yaml"
+		vcr2=config["variant_CR2"],
+	conda:
+		"envs/bcftools_plink_R.yaml"
 	shell:
 		"""
 		plink \
@@ -150,6 +150,7 @@ rule VariantCallrate98:
 		--make-bed \
 		--out {params.outfile}
 		"""
+
 
 rule get_MissDiff_HWE:
 	input:
@@ -224,8 +225,8 @@ rule filter_MissDiff_HWE:
 		"""
 		plink2 \
 		--bfile {params.infile} \
-		--exclude {input.miss_list} \ 
-		--set-all-var-ids @:#:\$r:\$a \ 
+		--exclude {input.miss_list} \
+		--set-all-var-ids @:#:\$r:\$a \
 		--make-bed \
 		--out {params.outfile}
 		"""
@@ -260,12 +261,17 @@ rule prepare_1000G_for_ancestry_PCA:
 		plink_in=lambda wildcards, input: input["fam"][:-4],
 		partition='batch',
 		bed1="results/1000G/1000G_chr{contig}",
-		bed2="results/1000G/1000G_chr{contig}_pruned"
-		hg_reference= config["hg_ref"]
+		bed2="results/1000G/1000G_chr{contig}_pruned",
+		hg_reference= config["hg_ref"],
+		maf1= config["bcf_maf"],
+		maf2= config["pca_maf"],
+		win_size= config["pca1_window_size"],
+		win_shift= config["pca1_window_shift"],
+		r2= config["pca1_r2"],
 	shell:
 		"""
 		
-		if bcftools view -q 0.05:minor "{input.bcf1000G}" | \
+		if bcftools view -q {params.maf1}:minor "{input.bcf1000G}" | \
 		bcftools norm -m-any --check-ref w -f "{input.fasta}" | \
 		bcftools annotate -x ID -I +'%CHROM:%POS:%REF:%ALT' | \
 		bcftools norm -Ob --rm-dup both \
@@ -290,13 +296,13 @@ rule prepare_1000G_for_ancestry_PCA:
 		plink --noweb \
 		--bfile {params.bed1} \
 		--extract {output.variant_list} \
-		--maf 0.10 --indep 50 5 1.5 \
+		--maf {params.maf1} --indep {params.win_size} {params.win_shift} {params.r2} \
 		--make-bed \
 		--out {params.bed2}
 		"""
 		
 
-rule merge_data_w_1000G_run_PCA:	
+rule merge_data_w_1000G_run_PCA:
 	input:
 		_1000G_data=expand("results/1000G/1000G_chr{contig}_pruned.bed", contig=config["contigs_wo_X"]), #### !!!!! 
 		fam="results/pre_imputation_QC/Geno05_SCRSex_VCR_MiHwe.fam",
@@ -316,7 +322,7 @@ rule merge_data_w_1000G_run_PCA:
 		mkdir -p results/PCA
 		
 		echo {input._1000G_data} | tr " " "\\n" | sed 's/.bed//g' > {output.merge_list}
-		plink --merge-list {output.merge_list} --out results/1000G/Merged   
+		plink --merge-list {output.merge_list} --out results/1000G/Merged   #this merged has not been specified 
 		awk '{{ print $2 }}' results/1000G/Merged.bim > results/1000G/MergeVariants.txt
 		
 		plink --bfile {params.plink_in} \
@@ -361,8 +367,8 @@ rule filter_plink_for_ancestry:
 
 		plink2 \
 		--bfile {params.plink_in} \
-		--keep {output.keep_fam} \
-		--require-pheno \	
+		--keep {output.keep_fam} \	#keep samples from european ancestry
+		--require-pheno \	#ensure that the kept samples have phenotype information available
 		--make-bed \
 		--out {params.plink_out}
 		
@@ -382,7 +388,7 @@ rule kinship_analysis:
 	shell:
 		"""
 		mkdir -p {params.out_folder}
-		king \ 
+		king \ #software package for genome-wide kinship and relationship inference
 		-b {params.plink_in}.bed \
 		--kinship \
 		--prefix {params.prefix}
@@ -470,7 +476,7 @@ rule kinship_check:
 
 rule make_pgen_files:
 	input:
-		vcf="resources/TopMed_imputation/chr{contig}.dose.vcf.gz",
+		vcf=config["imputed_files"]+"{contig}.vcf.gz",
 		fam="results/kinship/cohort_eur_unrelated.fam"
 	output:
 		pgen="results/bgen_conversion/chr{contig}.pgen",
@@ -489,27 +495,6 @@ rule make_pgen_files:
 		--out {params.plink_out}
 		"""
 
-
-rule make_sample_file:
-	input:
-		vcf="resources/TopMed_imputation/chrX.dose.vcf.gz",
-		fam="results/kinship/cohort_eur_unrelated.fam"
-	output:
-		sample="results/bgen_conversion/chrXplink.sample",
-		bgen="results/bgen_conversion/chrXplink.bgen",
-	params:
-		plink_out=lambda wildcards, output: output["sample"][:-7],
-	conda: "envs/bcftools_plink_R.yaml"
-	shell:
-		"""
-		plink2 \
-		--vcf {input.vcf} dosage=HDS \
-		--fam {input.fam} \
-		--export oxford bgen-1.2 bits=8 \
-		--threads 7 \
-		--out {params.plink_out}
-		"""
-
 rule prepare_genotyped_data_for_PCA:
 	input:
 		fam="results/kinship/cohort_eur_unrelated.fam"
@@ -518,13 +503,16 @@ rule prepare_genotyped_data_for_PCA:
 	params:
 		plink_in=lambda wildcards, input: input["fam"][:-4],
 		plink_out=lambda wildcards, output: output["fam"][:-4],
+		win_size= config["pca2_window_size"],
+		win_shift= config["pca2_window_shift"],
+		r2= config["pca2_r2"],
 	conda: "envs/bcftools_plink_R.yaml"
 	shell:
 		"""
 		# 6d. for PCA prune data, use genotyped file
 		plink2 \
 		--bfile {params.plink_in} \
-		--indep-pairwise 1000 50 0.2 \
+		--indep-pairwise {params.win_size} {params.win_shift} {params.r2} \
 		--chr 1-22 \
 		--threads 7 \
 		--out {params.plink_out}
@@ -584,8 +572,7 @@ rule make_pheno_cov:
 		"""
 
 
-
-rule regenie_step2SPAnoPRS:
+rule regenie_step2NOPRS:
 	input:
 		cov="results/pheno/cov.cov",
 		pheno="results/pheno/pheno.pheno",
@@ -593,12 +580,12 @@ rule regenie_step2SPAnoPRS:
 		step2_pgen="results/bgen_conversion/chr{chr}.pgen",
 		#step2_sample="results/bgen_conversion/chrXplink.sample"
 	output:
-		step2_NQ2="results/GWAS/SPAnoPRSSTEP2_{chr}_NQ2_3.regenie.gz",
-		step2_NQ1="results/GWAS/SPAnoPRSSTEP2_{chr}_NQ1_3.regenie.gz",
-		step2_NQ2_ID="results/GWAS/SPAnoPRSSTEP2_{chr}_NQ2_3.regenie.ids",
-		step2_NQ1_ID="results/GWAS/SPAnoPRSSTEP2_{chr}_NQ1_3.regenie.ids"		
+		step2_NQ2="results/GWAS/noPRSSTEP2_{chr}_NQ2_3.regenie.gz",
+		step2_NQ1="results/GWAS/noPRSSTEP2_{chr}_NQ1_3.regenie.gz",
+		step2_NQ2_ID="results/GWAS/noPRSSTEP2_{chr}_NQ2_3.regenie.ids",
+		step2_NQ1_ID="results/GWAS/noPRSSTEP2_{chr}_NQ1_3.regenie.ids"		
 	params:
-		step2="results/GWAS/SPAnoPRSSTEP2_{chr}",
+		step2="results/GWAS/noPRSSTEP2_{chr}",
 		plink_in=lambda wildcards, input: input["step2_pgen"][:-5],
 	conda: "envs/regenie.yaml"
 	shell:
@@ -609,7 +596,6 @@ rule regenie_step2SPAnoPRS:
 		--phenoFile {input.pheno} \
 		--covarFile {input.cov} \
 		--bt \
-		--spa \
 		--write-samples \
 		--gz \
 		--ignore-pred \
