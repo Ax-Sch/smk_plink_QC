@@ -1,19 +1,29 @@
+# Load necessary libraries
 library(randomForest)
 library(tidyverse)
 library(plotly)
+library(rmarkdown)
 
-# read in the eigenvectors, produced in PLINK
-eigenvec <- read.table('pca.eigenvec', header = FALSE, skip=0, sep = ' ')
+# Get command line arguments
+args=c('pca.eigenvec', '20130606_g1k.ped', 'population_PCA.html')
+
+# Define input and output files
+eigenvec_file <- args[1]
+ped_file <- args[2]
+output_file <- args[3]
+
+# Read in the eigenvectors, produced in PLINK
+eigenvec <- read.table(eigenvec_file, header = FALSE, skip=0, sep = ' ')
 eigenvec <- eigenvec[,2:ncol(eigenvec)]
 colnames(eigenvec) <- c("Individual.ID",paste('PC', c(1:20), sep = ''))
 
-# read in the PED data
-PED <- read.table('20130606_g1k.ped', header = TRUE, skip = 0, sep = '\t')
+# Read in the PED data
+PED <- read.table(ped_file, header = TRUE, skip = 0, sep = '\t')
 
-#build data frame for random forest classifier
+# Build data frame for random forest classifier
 dataRF <- merge(eigenvec, PED[, c("Individual.ID", "Population")], all.x=TRUE)
 
-#build plot
+# Build plot
 dataRF$Population <- factor(dataRF$Population, levels=c(
   "ACB","ASW","ESN","GWD","LWK","MSL","YRI",
   "CLM","MXL","PEL","PUR",
@@ -33,49 +43,22 @@ rf_classifier = randomForest(Continental ~ .,
                              data=dataRF[which(!is.na(dataRF$Continental)), c("PC1","PC2","PC3","PC4","PC5","PC6", "Continental")], 
                              ntree=3000, importance=TRUE)
 
-#predict population in your cohort
+# Predict population in your cohort
 dataPred<-dataRF[which(is.na(dataRF$Continental)),]
 dataRF<-dataRF[which(!is.na(dataRF$Continental)),]
 dataPred$Prediction<-rep(NA, nrow(dataPred))
 dataPred$Prediction<-predict(rf_classifier,dataPred[,c("PC1","PC2","PC3","PC4","PC5","PC6")])
 
-#outliers<-c()
-# manuell outlier entfernt:
-#dataPred
+PC1_2_plot <- ggplot() +
+  geom_point(data=dataRF, aes(x=PC1, y=PC2, shape=Continental), alpha=0.5, size=3) + 
+  geom_point(data=dataPred, aes(x=PC1, y=PC2, color=Prediction, text=Individual.ID), shape=1, alpha=0.8, size=3) +
+  theme_bw() +
+  theme(axis.text.x = element_text(size=10), axis.text.y = element_text(size=10))
 
-
-#outliers <- c("FO13863x01_02","FO14026x01_02","DE17BOSUKDD100080","DE39BOSUKDD100072","DE93BOSUKDD100070","DE06BOSUKDD100084","FO14016x01_02","DE38BOSUKED100009","DE76BOSUKDD100085","DE66BOSUKDD100071","DE88BOSUKDD100063","FO14344x02_02","DE37BOSUKDD100011","FO14432x01_02")
-
-#dataPred <- dataPred %>% 
-#  mutate(Prediction=as.factor(ifelse(Prediction=="EUR" & (PC1>-0.0067 | PC2<1.5e-2 | PC3<2e-3), "UNK", as.character(Prediction))))
-
-
-PC1_2_plot<-ggplot()+
-  geom_point(data=dataRF, aes(x=PC1,y=PC2,shape=Continental), alpha=0.5,size=3)+ 
-  geom_point(data=dataPred, aes(x=PC1,y=PC2,color=Prediction, text=Individual.ID),shape=1, alpha=0.8,size=3 )+
-  theme_bw()+
-  theme(axis.text.x = element_text(size=10),
-        axis.text.y = element_text(size=10))
-
-ggsave(filename="PC1_2_plot.pdf",
-       plot=PC1_2_plot,
-       width=4,
-       height=3.5)
+ggsave(filename="PC1_2_plot.pdf", plot=PC1_2_plot, width=4, height=3.5)
 ggplotly(PC1_2_plot)
-  
 
-ggplotly(ggplot()+
-           geom_point(data=dataRF, aes(x=PC3,y=PC4,shape=Continental), alpha=0.5,size=3)+ 
-           geom_point(data=dataPred, aes(x=PC3,y=PC4,color=Prediction, text=Individual.ID),shape=1, alpha=0.8,size=2 ) )
+# Save the results
+write_tsv(dataPred %>% select(Individual.ID, Prediction), file="populations.txt")
 
-ggplotly(ggplot()+
-           geom_point(data=dataRF, aes(x=PC5,y=PC6,shape=Continental), alpha=0.5,size=3)+ 
-           geom_point(data=dataPred, aes(x=PC5,y=PC6,color=Prediction, text=Individual.ID),shape=1, alpha=0.8,size=2 ) )
-
-ggplotly(ggplot()+
-           geom_point(data=dataRF, aes(x=PC7,y=PC8,shape=Continental), alpha=0.5,size=3)+ 
-           geom_point(data=dataPred, aes(x=PC7,y=PC8,color=Prediction, text=Individual.ID),shape=1, alpha=0.8,size=2 ) )
-
-# lastly write IDs per population in files to be used for further analyses
-write_tsv(dataPred %>% select(Individual.ID, Prediction),file="populations.txt")
-
+# Render the R Markdown file to HTML

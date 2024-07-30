@@ -1,7 +1,7 @@
-name: king
+name: bcftools
 channels:
-  - bioconda
   - conda-forge
+  - bioconda
   - defaults
 dependencies:
-  - king
+  - bcftools==1.10.2

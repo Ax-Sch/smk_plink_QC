@@ -2,6 +2,8 @@ results/
 .snakemake/
 .conda/
 .cache/
+.idea/
 input_files/
 dockerfile
 resources/
+mods/

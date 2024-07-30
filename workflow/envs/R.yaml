@@ -1,0 +1,12 @@
+name: R
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - r-randomforest
+  - r-tidyverse
+  - r-data.table
+  - r-plotly
+  - r-readxl  
+  - r-optparse

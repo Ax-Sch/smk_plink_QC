@@ -1,5 +1,0 @@
-name: regenie
-channels:
-  - bioconda
-dependencies:
-  - regenie=3.0.3

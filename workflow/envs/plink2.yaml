@@ -1,7 +1,7 @@
-name: king
+name: plink2
 channels:
   - bioconda
   - conda-forge
   - defaults
 dependencies:
-  - king
+  - plink2
