@@ -31,7 +31,7 @@ rule prepare_correct_x:
         
         plink \
         --bfile {params.mergex} \
-        --split-x b37 no-fail \
+        --split-x {params.hg_reference} no-fail \
         --make-bed \
         --out {params.splitx}
         
