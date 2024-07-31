@@ -2,7 +2,6 @@
 input_plink: "input_files/prepared.fam"
 location_1000G: "resources/1000G/"
 fasta: "resources/fasta/human_g1k_v37.fasta"
-imputed_files: "resources/trial5withparregions.vcfs/"
 contigs_wo_X:
  - 1
  - 2
