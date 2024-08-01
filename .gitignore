@@ -5,6 +5,8 @@ results/
 .idea/
 input_files/
 dockerfile
-resources/1000G/
-resources/fasta/
+resources/1000G/*
+resources/fasta/*
+!resources/1000G/.gitkeep
+!resources/fasta/.gitkeep
 mods/
