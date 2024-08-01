@@ -54,4 +54,4 @@ snakemake --cores 1 --use-conda
 All configuration options can be found in the config.yaml file. This file allows you to customize paths, parameters, and settings to fit your specific needs.
 
 ### 5. Acknowledgements
-I would like to thank my supervisors, Dr. Axel Schmidt (@Ax-Sch) and Dr. Kerstin Ludwig, for their guidance and support. Additionally, I would like to thank the developers of the software used within this repository.
+I would like to thank my supervisors, Dr. Axel Schmidt ([@Ax-Sch](https://github.com/Ax-Sch)) and Dr. Kerstin Ludwig, for their guidance and support. Additionally, I would like to thank the developers of the software used within this repository.
