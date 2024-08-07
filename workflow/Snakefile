@@ -245,7 +245,7 @@ rule download_1000G_sample_info:
 rule download_chromosomes:
     output:
         bcf1000G= config["location_1000G"]+"ALL.chr{contig}.phase3_shapeit2_mvncall_integrated_v5.20130502.genotypes.bcf",
-        "resources/1000G/ALL.chr{contig}.phase3_shapeit2_mvncall_integrated_v5.20130502.genotypes.bcf.csi"
+        bcf1000G_csi="resources/1000G/ALL.chr{contig}.phase3_shapeit2_mvncall_integrated_v5.20130502.genotypes.bcf.csi",
     resources: cpus=1, mem_mb=3000, time_job=720
     params:
         partition='batch'
