@@ -282,7 +282,7 @@ rule unzip_fasta:
 
 rule prepare_1000G_for_ancestry_PCA_step1:
     input:
-        bcf1000G=config["location_1000G"]+"ALL.chr{contig}.phase3_shapeit2_mvncall_integrated_v5b.20130502.genotypes.bcf",
+        bcf1000G=config["location_1000G"]+"ALL.chr{contig}.phase3_shapeit2_mvncall_integrated_v5.20130502.genotypes.bcf",
         fasta=config["fasta"]
     output:
         vcf="results/1000G/1000G_chr{contig}.bcf",
