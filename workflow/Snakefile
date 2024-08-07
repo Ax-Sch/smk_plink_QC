@@ -244,8 +244,11 @@ rule download_1000G_sample_info:
 
 rule download_chromosomes:
     output:
-        vcf="resources/1000G/ALL.chr{contig}.phase3_shapeit2_mvncall_integrated_v5.20130502.genotypes.bcf",
-        tbi="resources/1000G/ALL.chr{contig}.phase3_shapeit2_mvncall_integrated_v5.20130502.genotypes.bcf.csi"
+        "resources/1000G/ALL.chr{contig}.phase3_shapeit2_mvncall_integrated_v5.20130502.genotypes.bcf",
+        "resources/1000G/ALL.chr{contig}.phase3_shapeit2_mvncall_integrated_v5.20130502.genotypes.bcf.csi"
+    resources: cpus=1, mem_mb=3000, time_job=720
+    params:
+        partition='batch'
     shell:
         """
         wget -P resources/1000G/ ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/supporting/bcf_files/ALL.chr{contig}.phase3_shapeit2_mvncall_integrated_v5.20130502.genotypes.bcf
@@ -257,6 +260,9 @@ rule download_fasta_files:
         "resources/fasta/README.human_g1k_v37.fasta.txt",
         "resources/fasta/human_g1k_v37.fasta.fai",
         "resources/fasta/human_g1k_v37.fasta.gz"
+    resources: cpus=1, mem_mb=3000, time_job=720
+    params:
+        partition='batch',
     shell:
         """
         wget -P resources/fasta/ ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/README.human_g1k_v37.fasta.txt
