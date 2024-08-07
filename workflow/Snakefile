@@ -228,6 +228,7 @@ rule filter_MissDiff_HWE:
         --out {params.outfile}
         """
 
+#################PCA_for_ancestry####################
 
 rule download_1000G_sample_info:
     output:
@@ -241,6 +242,37 @@ rule download_1000G_sample_info:
         wget -nc ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/working/20130606_sample_info/20130606_g1k.ped #downloading data from a specific url(no clobber)
         """
 
+rule download_chromosomes:
+    output:
+        vcf="resources/1000G/ALL.chr{contig}.phase3_shapeit2_mvncall_integrated_v5.20130502.genotypes.bcf",
+        tbi="resources/1000G/ALL.chr{contig}.phase3_shapeit2_mvncall_integrated_v5.20130502.genotypes.bcf.csi"
+    shell:
+        """
+        wget -P resources/1000G/ ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/supporting/bcf_files/ALL.chr{contig}.phase3_shapeit2_mvncall_integrated_v5.20130502.genotypes.bcf
+        wget -P resources/1000G/ ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/supporting/bcf_files/ALL.chr{contig}.phase3_shapeit2_mvncall_integrated_v5.20130502.genotypes.bcf.csi
+        """
+
+rule download_fasta_files:
+    output:
+        "resources/fasta/README.human_g1k_v37.fasta.txt",
+        "resources/fasta/human_g1k_v37.fasta.fai",
+        "resources/fasta/human_g1k_v37.fasta.gz"
+    shell:
+        """
+        wget -P resources/fasta/ ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/README.human_g1k_v37.fasta.txt
+        wget -P resources/fasta/ ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/human_g1k_v37.fasta.fai
+        wget -P resources/fasta/ ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/human_g1k_v37.fasta.gz
+        """
+
+rule unzip_fasta:
+    input:
+        "resources/fasta/human_g1k_v37.fasta.gz"
+    output:
+        "resources/fasta/human_g1k_v37.fasta"
+    shell:
+        """
+        gunzip -c {input} > {output}
+        """
 
 rule prepare_1000G_for_ancestry_PCA_step1:
     input:

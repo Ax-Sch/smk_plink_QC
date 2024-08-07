@@ -42,27 +42,9 @@ Navigate to the config.yaml file in the config directory. Here, you can adjust p
 ```sh
 input_plink: "path/to/your/input_files/prepared.fam"
 ```
+The input files for this pipeline are genotype data in .bim, .bed, and .fam formats, with sex information and case/control status already included as phenotypes.
 
-2. Download resource files:
-
-Run the following commands to download the 1000Genome data, which will be used for PCA: Phase 3 | IGSR data collection (internationalgenome.org)
-
-```shell
-cd resources/1000G/
-wget -r -nH --cut-dirs=3 --no-parent -P . ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/
-
-cd ..
-cd fasta/
-wget ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/README.human_g1k_v37.fasta.txt
-wget ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/human_g1k_v37.fasta.fai
-wget ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/human_g1k_v37.fasta.gz
-gunzip human_g1k_v37.fasta.gz
-
-cd ..
-cd ..
-```
-
-3. Run the Pipeline
+2. Run the Pipeline
 
 Perform a dry run to ensure everything is set up correctly:
 ```sh
