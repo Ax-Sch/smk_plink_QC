@@ -241,69 +241,12 @@ rule download_1000G_sample_info:
         cd results/PCA/
         wget -nc ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/working/20130606_sample_info/20130606_g1k.ped #downloading data from a specific url(no clobber)
         """
+if (config["genome_ref"]["version"] == "b37"):
+    include: "rules/version37_pca.smk"
 
-rule download_chromosomes:
-    output:
-        bcf1000G= config["location_1000G"]+"ALL.chr{contig}.phase3_shapeit2_mvncall_integrated_v5.20130502.genotypes.bcf",
-        bcf1000G_csi="resources/1000G/ALL.chr{contig}.phase3_shapeit2_mvncall_integrated_v5.20130502.genotypes.bcf.csi",
-    resources: cpus=1, mem_mb=3000, time_job=720
-    params:
-        partition='batch'
-    shell:
-        """
-        wget -P resources/1000G/ ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/supporting/bcf_files/ALL.chr{contig}.phase3_shapeit2_mvncall_integrated_v5.20130502.genotypes.bcf
-        wget -P resources/1000G/ ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/supporting/bcf_files/ALL.chr{contig}.phase3_shapeit2_mvncall_integrated_v5.20130502.genotypes.bcf.csi
-        """
+if (config["genome_ref"]["version"] == "b38"):
+    include: "rules/version38_pca.smk"
 
-rule download_fasta_files:
-    output:
-        "resources/fasta/README.human_g1k_v37.fasta.txt",
-        "resources/fasta/human_g1k_v37.fasta.fai",
-        "resources/fasta/human_g1k_v37.fasta.gz"
-    resources: cpus=1, mem_mb=3000, time_job=720
-    params:
-        partition='batch',
-    shell:
-        """
-        wget -P resources/fasta/ ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/README.human_g1k_v37.fasta.txt
-        wget -P resources/fasta/ ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/human_g1k_v37.fasta.fai
-        wget -P resources/fasta/ ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/human_g1k_v37.fasta.gz
-        """
-
-rule unzip_fasta:
-    input:
-        "resources/fasta/human_g1k_v37.fasta.gz"
-    output:
-        "resources/fasta/human_g1k_v37.fasta"
-    shell:
-        """
-        gunzip -c {input} > {output}
-        """
-
-rule prepare_1000G_for_ancestry_PCA_step1:
-    input:
-        bcf1000G=config["location_1000G"]+"ALL.chr{contig}.phase3_shapeit2_mvncall_integrated_v5.20130502.genotypes.bcf",
-        fasta=config["fasta"]
-    output:
-        vcf="results/1000G/1000G_chr{contig}.bcf",
-    resources: cpus=1, mem_mb=18000, time_job=720
-    conda: "envs/bcftools.yaml"
-    params:
-        partition='batch',
-        maf1=config["pca_1000G"]["bcf_maf"],
-    shell:
-        """
-        if bcftools view -q {params.maf1}:minor "{input.bcf1000G}" | \
-        bcftools norm -m-any --check-ref w -f "{input.fasta}" | \
-        bcftools annotate -x ID -I +'%CHROM:%POS:%REF:%ALT' | \
-        bcftools norm -Ob --rm-dup both \
-        > {output.vcf} ; then
-        echo "no error"
-        fi
-        
-        bcftools index {output.vcf}
-        """
-        
 rule prepare_1000G_for_ancestry_PCA_step2:
     input:
         fam="results/pre_imputation_QC/Geno05_SCRSex_VCR_MiHwe.fam",

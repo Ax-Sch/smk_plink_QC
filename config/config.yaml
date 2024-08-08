@@ -1,7 +1,6 @@
 ---
-input_plink: "input_files/prepared.fam"
+input_plink: "input_files/files.fam"
 location_1000G: "resources/1000G/"
-fasta: "resources/fasta/human_g1k_v37.fasta"
 contigs_wo_X:
  - 1
  - 2

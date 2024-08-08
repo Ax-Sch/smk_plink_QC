@@ -38,9 +38,11 @@ conda activate snakemake8
 ### 3. Usage
 1. Configure Input Files and Parameters
 
-Navigate to the config.yaml file in the config directory. Here, you can adjust parameters according to your requirements. For example, you can set the path to your input files:
+Navigate to the config.yaml file in the config directory. Here, you can adjust parameters according to your requirements. For example, you can set the path to your input files, and Human genome reference version:
 ```sh
-input_plink: "path/to/your/input_files/prepared.fam"
+input_plink: "path/to/your/input_files/files.fam"
+genome_ref:
+    version: b37 or b38
 ```
 The input files for this pipeline are genotype data in .bim, .bed, and .fam formats, with sex information and case/control status already included as phenotypes.
 
