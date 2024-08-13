@@ -1,3 +1,12 @@
+rule all:
+    input:
+        expand("results/1000G/1000G_chr{contig}.bcf",contig=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+                                                     11, 12, 13, 14, 15, 16, 17, 18,
+                                                     19, 20, 21, 22]),
+        "resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.dict",
+        "resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa.fai",
+        "resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa.ann"
+
 rule download_chromosomes:
     output:
         vcf1000G= config["location_1000G"]+ "ALL.chr{contig}.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz",
@@ -16,7 +25,7 @@ rule download_fasta_files:
         "resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.dict",
         "resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa.fai",
         "resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa.ann",
-        fasta_gz="resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa",
+        "resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa",
     resources: cpus=1, mem_mb=3000, time_job=720
     params:
         partition='batch',
