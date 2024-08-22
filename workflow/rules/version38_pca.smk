@@ -1,4 +1,6 @@
-rule all:
+configfile: '././config/config.yaml'
+
+rule all_pca38:
     input:
         expand("results/1000G/1000G_chr{contig}.bcf",contig=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
                                                      11, 12, 13, 14, 15, 16, 17, 18,
@@ -44,7 +46,7 @@ rule prepare_1000G_for_ancestry_PCA_step1:
     output:
         bcf="results/1000G/1000G_chr{contig}.bcf",
     resources: cpus=1, mem_mb=18000, time_job=720
-    conda: "envs/bcftools.yaml"
+    conda: "../envs/bcftools.yaml"
     params:
         partition='batch',
         maf1=config["pca_1000G"]["bcf_maf"],

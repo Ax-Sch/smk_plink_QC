@@ -10,3 +10,5 @@ resources/fasta/*
 !resources/1000G/.gitkeep
 !resources/fasta/.gitkeep
 mods/
+resources/eur_ids.txt
+resources/non_eur_ids.txt

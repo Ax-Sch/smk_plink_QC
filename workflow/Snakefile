@@ -4,7 +4,8 @@ import os
 rule all:
     input:
         "results/kinship/last_check_kinship_keep_fam",
-        "results/PCA/population_PCA.html",
+        "results/PCA/populations_PCA.html",
+        "results/PCA/populations.txt",       
         "resources/eur_ids.txt"
 
 rule prepare_correct_x:
@@ -240,12 +241,14 @@ rule download_1000G_sample_info:
         """
         cd results/PCA/
         wget -nc ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/working/20130606_sample_info/20130606_g1k.ped #downloading data from a specific url(no clobber)
-        """
-if (config["genome_ref"]["version"] == "b37"):
-    include: "rules/version37_pca.smk"
 
-if (config["genome_ref"]["version"] == "b38"):
+        """
+
+if config["genome_ref"]["version"] == "b37":
+    include: "rules/version37_pca.smk"
+elif config["genome_ref"]["version"] == "b38":
     include: "rules/version38_pca.smk"
+
 
 rule prepare_1000G_for_ancestry_PCA_step2:
     input:
@@ -335,7 +338,7 @@ rule make_pca_plots:
         eigenvec="results/PCA/pca.eigenvec",
         ped="results/PCA/20130606_g1k.ped",
     output:
-        html="results/PCA/population_PCA.html",
+        html="results/PCA/populations_PCA.html",
         populations="results/PCA/populations.txt",
     conda: "envs/R.yaml"
     shell:
@@ -343,6 +346,7 @@ rule make_pca_plots:
         cp -f workflow/scripts/populations_PCA.R results/PCA/populations_PCA.R
         cd results/PCA/
         Rscript -e 'library(rmarkdown); rmarkdown::render("populations_PCA.R","html_document")'
+        cd ../..
         #Rscript populations_PCA.R {input.eigenvec} {input.ped} {output.html}
         """
 
@@ -360,7 +364,7 @@ rule run_pca_filter:
     conda:"envs/R.yaml"
     shell:
         """
-        Rscript workflow/scripts/pca_filter.R \ 
+        Rscript workflow/scripts/pca_filter.R \
         --pc1_min {params.pc1_min} \
         --pc1_max {params.pc1_max} \
         --pc2_min {params.pc2_min} \
