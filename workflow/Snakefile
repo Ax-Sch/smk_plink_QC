@@ -86,7 +86,6 @@ rule SampleCallrate98_sex:
 
 rule filter_sex_checked:
     input:
-        sex_check_file="results/pre_imputation_QC/Geno05_SCRSex.sexcheck",
         infile="results/pre_imputation_QC/Geno05_SCRSex.fam"
     output:
         problem_sex="results/pre_imputation_QC/sex_check_problem_sex.txt",
@@ -98,7 +97,7 @@ rule filter_sex_checked:
     conda: "envs/plink.yaml"
     shell:
         """
-        grep -P "PROBLEM|STATUS" {input.sex_check_file} > {output.problem_sex}
+        grep -P "PROBLEM|STATUS" {params.infile}.sexcheck > {output.problem_sex}
         tail -n +2 {output.problem_sex} | awk '{{print $1 "\t" $2}}' > {output.remove_ids}
 
         plink \
@@ -144,7 +143,7 @@ rule check_heterozygosity:
     conda: "envs/R.yaml"
     shell:
         """
-        Rscript scripts/check_het.R \
+        Rscript workflow/scripts/check_het.R \
         --cases {input.cases} \
         --conts {input.conts} \
         --outfile {output} 
