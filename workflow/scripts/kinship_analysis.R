@@ -5,6 +5,7 @@ option_list = list(
   make_option(c("-f", "--fam_file"), type="character", default="results/PCA/cohort_eur.fam"),
   make_option(c("-k", "--kinship_file1"), type="character", default="results/kinship/Geno05_CR_sex_snp_qc_snpqc2_EUR.kin0"),
   make_option(c("-i", "--kinship_file2"), type="character", default="results/kinship/Geno05_CR_sex_snp_qc_snpqc2_EUR.kin0"),
+  make_option(c("-c", "--kinship_cutoff"), type="numeric", default= 0.04),
   make_option(c("-o", "--outfile"), type="character", default="results/kinship/exclude_ids.txt")
 )
 
@@ -18,6 +19,7 @@ cases<-fam_file[fam_file$X6==2,]$X2
 
 kinship_matrix1<-read_tsv(opt$kinship_file1)
 kinship_matrix2<-read_tsv(opt$kinship_file2)
+kinship_cutoff<- opt$kinship_cutoff
 
 common_colnames_ind <-colnames(kinship_matrix1) %in% colnames(kinship_matrix2)
 common_colnames<-colnames(kinship_matrix1)[common_colnames_ind]
@@ -26,7 +28,7 @@ kinship_matrix<-rbind(kinship_matrix1 %>% select(any_of(common_colnames)),
                       kinship_matrix2 %>% select(any_of(common_colnames)))
 
 relateds<-kinship_matrix %>% 
-  filter(Kinship>0.04) %>%
+  filter(Kinship>kinship_cutoff) %>%
   distinct()
 
 # make sorted related list

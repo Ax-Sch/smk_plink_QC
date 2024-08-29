@@ -30,6 +30,17 @@ CR_filters:
     variant_CR1: 0.05
     sample_CR1: 0.02
     variant_CR2: 0.02
+
+F_coefficent:
+    lower_cutoff: -0.2
+    upper_cutoff: 0.2
+
+HWE:
+    miss_diff: 0.02
+    non_x_up: 1e-06
+    non_x_ap: 1e-10
+    x_ap: 1e-06
+
 pca_1000G:
     bcf_maf: 0.05
     pca_maf: 0.10
@@ -42,3 +53,7 @@ pca_filters_eur:
   pc1_max: -0.005
   pc2_min: -0.017
   pc2_max: -0.0128
+
+Kinship:
+  cutoff1: 0.04
+  cutoff2: 0.04

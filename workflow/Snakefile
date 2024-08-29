@@ -6,7 +6,7 @@ rule all:
         "results/kinship/last_check_kinship_keep_fam",
         "results/PCA/populations_PCA.html",
         "results/PCA/populations.txt",       
-        "resources/eur_ids.txt"
+        "resources/non_eur_ids.txt"
 
 rule prepare_correct_x:
     input:
@@ -140,12 +140,17 @@ rule check_heterozygosity:
         conts="results/pre_imputation_QC/Geno05_SCRSex_checked_controls.het",
     output:
         exclude_list="results/pre_imputation_QC/Geno05_CRSex_checked_het_exclude.txt",
+    params:
+        lower_cutoff= config["F_coefficent"]["lower_cutoff"],
+        upper_cutoff= config["F_coefficent"]["upper_cutoff"],
     conda: "envs/R.yaml"
     shell:
         """
         Rscript workflow/scripts/check_het.R \
         --cases {input.cases} \
         --conts {input.conts} \
+        --lower_cutoff {params.lower_cutoff} \
+        --upper_cutoff {params.upper_cutoff} \
         --outfile {output} 
         """
 
@@ -240,6 +245,11 @@ rule check_MissDiff_HWE:
         hwe_female="results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_female.hwe",
     output:
         "results/pre_imputation_QC/remove_missingness_hwe.txt",
+    params:
+        miss_diff=config["HWE"]["miss_diff"],
+        p1=config["HWE"]["non_x_up"],
+        p2=config["HWE"]["non_x_ap"],
+        p3=config["HWE"]["x_ap"]
     conda: "envs/R.yaml"
     shell:
         """
@@ -248,6 +258,10 @@ rule check_MissDiff_HWE:
          --miss_cont {input.miss_cont} \
          --hwe_all {input.hwe_all} \
          --hwe_female {input.hwe_female} \
+         --miss_diff {params.miss_diff} \
+         --non_x_up {params.p1} \
+         --non_x_ap {params.p2} \
+         --x_ap {params.p3} \
          --outfile {output} 
          """
         
@@ -418,9 +432,9 @@ rule run_pca_filter:
 rule filter_plink_for_ancestry:
     input:
         fam="results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam",
-        non_europ_exclude="resources/non_eur_ids.txt",
+        europ_include="resources/eur_ids.txt",
     output:
-        keep_fam="results/PCA/non_europ_exclude.fam",
+        keep_fam="results/PCA/non_europ_excluded.fam",
         fam="results/PCA/cohort_eur.fam",
     params:
         plink_in=lambda wildcards, input: input["fam"][:-4],
@@ -428,7 +442,7 @@ rule filter_plink_for_ancestry:
     conda: "envs/plink2.yaml"
     shell:
         """
-        grep -vf {input.non_europ_exclude} {input.fam} > {output.keep_fam}
+        grep -F -f {input.europ_include} {input.fam} > {output.keep_fam}
 
         plink2 \
         --bfile {params.plink_in} \
@@ -466,6 +480,8 @@ rule kinship_analysis_R:
         kinship_file2="results/kinship/Geno05_CR_sex_snp_qc_snpqc2_EUR.kin0",
     output:
         kinship_keep="results/kinship/keep_ids.fam",
+    params:
+        kinship=config["Kinship"]["cutoff1"]
     conda: "envs/R.yaml"
     shell:
         """
@@ -473,6 +489,7 @@ rule kinship_analysis_R:
         --fam_file {input.fam} \
         --kinship_file1 {input.kinship_file1} \
         --kinship_file2 {input.kinship_file2} \
+        --kinship_cutoff {params.kinship} \
         --outfile {output.kinship_keep} 
         """
 
@@ -524,6 +541,8 @@ rule kinship_check2_R:
         kinship_file2="results/kinship/last_check_kinship.kin0",
     output:
         kinship_keep="results/kinship/last_check_kinship_keep_fam",
+    params:
+        kinship=config["Kinship"]["cutoff2"]
     conda: "envs/R.yaml"
     shell:
         """
@@ -531,6 +550,7 @@ rule kinship_check2_R:
         --fam_file {input.fam} \
         --kinship_file1 {input.kinship_file1} \
         --kinship_file2 {input.kinship_file2} \
+        --kinship_cutoff {params.kinship} \
         --outfile {output.kinship_keep}
 
         echo "length of original fam file:"
