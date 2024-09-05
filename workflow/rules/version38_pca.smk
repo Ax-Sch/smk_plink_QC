@@ -55,6 +55,8 @@ rule prepare_1000G_for_ancestry_PCA_step1:
         if bcftools view -q {params.maf1}:minor "{input.vcf1000G}" | \
         bcftools norm -m-any --check-ref w -f "{input.fasta}" | \
         bcftools annotate -x ID -I +'%CHROM:%POS:%REF:%ALT' | \
+        sed 's/^chr//; s/\\tchr/\\t/' | \
+        sed 's/##contig=<ID=chr/##contig=<ID=/' | \
         bcftools norm -Ob --rm-dup both \
         > {output.bcf} ; then
         echo "no error"

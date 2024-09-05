@@ -335,7 +335,7 @@ rule prepare_1000G_for_ancestry_PCA_step2:
         --split-x {params.hg_reference} no-fail \
         --make-bed \
         --out {params.bed1}
-        
+
         cut -f2 {params.plink_in}.bim > {output.variant_list}
         
         plink --noweb \

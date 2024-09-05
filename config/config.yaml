@@ -1,5 +1,5 @@
 ---
-input_plink: "../input_files/prepared_fin.fam"
+input_plink: "input_files/prepared_final_38.fam"
 location_1000G: "resources/1000G/"
 contigs_wo_X:
  - 1
@@ -25,7 +25,7 @@ contigs_wo_X:
  - 21
  - 22
 genome_ref:
-    version: b37
+    version: b38
 CR_filters:
     variant_CR1: 0.05
     sample_CR1: 0.02

@@ -1,4 +1,4 @@
-library(tidyveri)
+library(tidyverse)
 library(optparse)
 
 
@@ -12,7 +12,7 @@ option_list = list(
 )
 
 pt_parser <- OptionParser(option_list = option_list)
-opt <- parse_args(opt_parser)
+opt <- parse_args(pt_parser)
 
 het_file_cases=read.table(file = opt$cases, sep="", header=T)
 het_file_controls=read.table(file = opt$conts, sep="", header=T)
