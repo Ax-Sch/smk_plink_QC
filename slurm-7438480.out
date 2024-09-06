@@ -1,0 +1,1327 @@
+Using profile config/snakemake_slurm_profile/ for setting default command line arguments.
+Building DAG of jobs...
+Your conda installation is not configured to use strict channel priorities. This is however crucial for having robust and correct environments (for details, see https://conda-forge.org/docs/user/tipsandtricks.html). Please consider to configure strict priorities by executing 'conda config --set channel_priority strict'.
+Creating conda environment workflow/envs/plink.yaml...
+Downloading and installing remote packages.
+Environment for /home/rtanavade/smk_plink_QC/workflow/envs/plink.yaml created (location: .snakemake/conda/ac7891263133836a42423fcb23f00986_)
+Creating conda environment workflow/envs/bcftools.yaml...
+Downloading and installing remote packages.
+Environment for /home/rtanavade/smk_plink_QC/workflow/rules/../envs/bcftools.yaml created (location: .snakemake/conda/6a5296c3ecd173686904ab1631fd4b93_)
+Creating conda environment workflow/envs/king.yaml...
+Downloading and installing remote packages.
+Environment for /home/rtanavade/smk_plink_QC/workflow/envs/king.yaml created (location: .snakemake/conda/632b4492d82684280c0b0aff8997b8ce_)
+Creating conda environment workflow/envs/R.yaml...
+Downloading and installing remote packages.
+Environment for /home/rtanavade/smk_plink_QC/workflow/envs/R.yaml created (location: .snakemake/conda/3d9b690b9857030efe845b0bff4f447a_)
+Creating conda environment workflow/envs/plink2.yaml...
+Downloading and installing remote packages.
+Environment for /home/rtanavade/smk_plink_QC/workflow/envs/plink2.yaml created (location: .snakemake/conda/5f7816ae62779985725e5a7247bc84eb_)
+You are running snakemake in a SLURM job context. This is not recommended, as it may lead to unexpected behavior. Please run Snakemake directly on the login node.
+SLURM run ID: 5a1eedfd-a7a6-464c-a5ab-e8092d7952d2
+Using shell: /usr/bin/bash
+Provided remote nodes: 250
+Job stats:
+job                                     count
+------------------------------------  -------
+SampleCallrate98_sex                        1
+VariantCallrate98                           1
+all                                         1
+check_MissDiff_HWE                          1
+check_heterozygosity                        1
+download_1000G_sample_info                  1
+download_chromosomes                       22
+download_fasta_files                        1
+filter_MissDiff_HWE                         1
+filter_het_samples                          1
+filter_plink_for_ancestry                   1
+filter_sex_checked                          1
+genotyping05                                1
+get_MissDiff_HWE                            1
+get_heterozygosity                          1
+kinship_analysis                            1
+kinship_analysis_R                          1
+kinship_check2                              1
+kinship_check2_R                            1
+make_pca_plots                              1
+merge_data_w_1000G_run_PCA                  1
+prepare_1000G_for_ancestry_PCA_step1       22
+prepare_1000G_for_ancestry_PCA_step2       22
+prepare_correct_x                           1
+remove_relateds                             1
+run_pca_filter                              1
+total                                      89
+
+Select jobs to execute...
+Execute 25 jobs...
+
+[Thu Sep  5 16:49:33 2024]
+rule download_chromosomes:
+    output: resources/1000G/ALL.chr21.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/1000G/ALL.chr21.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz.tbi
+    jobid: 80
+    reason: Missing output files: resources/1000G/ALL.chr21.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz
+    wildcards: contig=21
+    resources: mem_mb=3000, mem_mib=2862, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 80 has been submitted with SLURM jobid 7438512 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_download_chromosomes/21/7438512.log).
+
+[Thu Sep  5 16:49:33 2024]
+rule download_chromosomes:
+    output: resources/1000G/ALL.chr22.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/1000G/ALL.chr22.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz.tbi
+    jobid: 83
+    reason: Missing output files: resources/1000G/ALL.chr22.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz
+    wildcards: contig=22
+    resources: mem_mb=3000, mem_mib=2862, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 83 has been submitted with SLURM jobid 7438513 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_download_chromosomes/22/7438513.log).
+
+[Thu Sep  5 16:49:33 2024]
+rule download_chromosomes:
+    output: resources/1000G/ALL.chr18.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/1000G/ALL.chr18.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz.tbi
+    jobid: 71
+    reason: Missing output files: resources/1000G/ALL.chr18.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz
+    wildcards: contig=18
+    resources: mem_mb=3000, mem_mib=2862, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 71 has been submitted with SLURM jobid 7438514 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_download_chromosomes/18/7438514.log).
+
+[Thu Sep  5 16:49:33 2024]
+rule download_chromosomes:
+    output: resources/1000G/ALL.chr1.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/1000G/ALL.chr1.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz.tbi
+    jobid: 19
+    reason: Missing output files: resources/1000G/ALL.chr1.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz
+    wildcards: contig=1
+    resources: mem_mb=3000, mem_mib=2862, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 19 has been submitted with SLURM jobid 7438515 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_download_chromosomes/1/7438515.log).
+
+[Thu Sep  5 16:49:34 2024]
+rule download_fasta_files:
+    output: resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.dict, resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa.fai, resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa.ann, resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa
+    jobid: 20
+    reason: Missing output files: resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa
+    resources: mem_mb=3000, mem_mib=2862, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 20 has been submitted with SLURM jobid 7438516 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_download_fasta_files/7438516.log).
+
+[Thu Sep  5 16:49:34 2024]
+rule download_1000G_sample_info:
+    output: results/PCA/20130606_g1k.ped
+    jobid: 84
+    reason: Missing output files: results/PCA/20130606_g1k.ped
+    resources: mem_mb=3000, mem_mib=2862, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 84 has been submitted with SLURM jobid 7438517 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_download_1000G_sample_info/7438517.log).
+
+[Thu Sep  5 16:49:34 2024]
+rule download_chromosomes:
+    output: resources/1000G/ALL.chr17.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/1000G/ALL.chr17.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz.tbi
+    jobid: 68
+    reason: Missing output files: resources/1000G/ALL.chr17.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz
+    wildcards: contig=17
+    resources: mem_mb=3000, mem_mib=2862, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 68 has been submitted with SLURM jobid 7438518 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_download_chromosomes/17/7438518.log).
+
+[Thu Sep  5 16:49:34 2024]
+rule download_chromosomes:
+    output: resources/1000G/ALL.chr20.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/1000G/ALL.chr20.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz.tbi
+    jobid: 77
+    reason: Missing output files: resources/1000G/ALL.chr20.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz
+    wildcards: contig=20
+    resources: mem_mb=3000, mem_mib=2862, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 77 has been submitted with SLURM jobid 7438519 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_download_chromosomes/20/7438519.log).
+
+[Thu Sep  5 16:49:34 2024]
+rule download_chromosomes:
+    output: resources/1000G/ALL.chr11.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/1000G/ALL.chr11.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz.tbi
+    jobid: 50
+    reason: Missing output files: resources/1000G/ALL.chr11.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz
+    wildcards: contig=11
+    resources: mem_mb=3000, mem_mib=2862, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 50 has been submitted with SLURM jobid 7438520 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_download_chromosomes/11/7438520.log).
+
+[Thu Sep  5 16:49:35 2024]
+rule download_chromosomes:
+    output: resources/1000G/ALL.chr13.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/1000G/ALL.chr13.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz.tbi
+    jobid: 56
+    reason: Missing output files: resources/1000G/ALL.chr13.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz
+    wildcards: contig=13
+    resources: mem_mb=3000, mem_mib=2862, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 56 has been submitted with SLURM jobid 7438521 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_download_chromosomes/13/7438521.log).
+
+[Thu Sep  5 16:49:35 2024]
+rule download_chromosomes:
+    output: resources/1000G/ALL.chr19.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/1000G/ALL.chr19.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz.tbi
+    jobid: 74
+    reason: Missing output files: resources/1000G/ALL.chr19.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz
+    wildcards: contig=19
+    resources: mem_mb=3000, mem_mib=2862, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 74 has been submitted with SLURM jobid 7438522 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_download_chromosomes/19/7438522.log).
+
+[Thu Sep  5 16:49:35 2024]
+rule download_chromosomes:
+    output: resources/1000G/ALL.chr15.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/1000G/ALL.chr15.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz.tbi
+    jobid: 62
+    reason: Missing output files: resources/1000G/ALL.chr15.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz
+    wildcards: contig=15
+    resources: mem_mb=3000, mem_mib=2862, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 62 has been submitted with SLURM jobid 7438523 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_download_chromosomes/15/7438523.log).
+
+[Thu Sep  5 16:49:35 2024]
+rule download_chromosomes:
+    output: resources/1000G/ALL.chr16.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/1000G/ALL.chr16.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz.tbi
+    jobid: 65
+    reason: Missing output files: resources/1000G/ALL.chr16.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz
+    wildcards: contig=16
+    resources: mem_mb=3000, mem_mib=2862, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 65 has been submitted with SLURM jobid 7438524 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_download_chromosomes/16/7438524.log).
+
+[Thu Sep  5 16:49:35 2024]
+rule download_chromosomes:
+    output: resources/1000G/ALL.chr12.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/1000G/ALL.chr12.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz.tbi
+    jobid: 53
+    reason: Missing output files: resources/1000G/ALL.chr12.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz
+    wildcards: contig=12
+    resources: mem_mb=3000, mem_mib=2862, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 53 has been submitted with SLURM jobid 7438525 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_download_chromosomes/12/7438525.log).
+
+[Thu Sep  5 16:49:36 2024]
+rule download_chromosomes:
+    output: resources/1000G/ALL.chr4.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/1000G/ALL.chr4.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz.tbi
+    jobid: 29
+    reason: Missing output files: resources/1000G/ALL.chr4.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz
+    wildcards: contig=4
+    resources: mem_mb=3000, mem_mib=2862, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 29 has been submitted with SLURM jobid 7438526 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_download_chromosomes/4/7438526.log).
+
+[Thu Sep  5 16:49:36 2024]
+rule download_chromosomes:
+    output: resources/1000G/ALL.chr2.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/1000G/ALL.chr2.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz.tbi
+    jobid: 23
+    reason: Missing output files: resources/1000G/ALL.chr2.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz
+    wildcards: contig=2
+    resources: mem_mb=3000, mem_mib=2862, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 23 has been submitted with SLURM jobid 7438527 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_download_chromosomes/2/7438527.log).
+
+[Thu Sep  5 16:49:36 2024]
+rule download_chromosomes:
+    output: resources/1000G/ALL.chr6.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/1000G/ALL.chr6.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz.tbi
+    jobid: 35
+    reason: Missing output files: resources/1000G/ALL.chr6.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz
+    wildcards: contig=6
+    resources: mem_mb=3000, mem_mib=2862, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 35 has been submitted with SLURM jobid 7438528 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_download_chromosomes/6/7438528.log).
+
+[Thu Sep  5 16:49:36 2024]
+rule download_chromosomes:
+    output: resources/1000G/ALL.chr10.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/1000G/ALL.chr10.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz.tbi
+    jobid: 47
+    reason: Missing output files: resources/1000G/ALL.chr10.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz
+    wildcards: contig=10
+    resources: mem_mb=3000, mem_mib=2862, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 47 has been submitted with SLURM jobid 7438529 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_download_chromosomes/10/7438529.log).
+
+[Thu Sep  5 16:49:36 2024]
+rule download_chromosomes:
+    output: resources/1000G/ALL.chr14.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/1000G/ALL.chr14.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz.tbi
+    jobid: 59
+    reason: Missing output files: resources/1000G/ALL.chr14.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz
+    wildcards: contig=14
+    resources: mem_mb=3000, mem_mib=2862, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 59 has been submitted with SLURM jobid 7438530 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_download_chromosomes/14/7438530.log).
+
+[Thu Sep  5 16:49:37 2024]
+rule download_chromosomes:
+    output: resources/1000G/ALL.chr7.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/1000G/ALL.chr7.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz.tbi
+    jobid: 38
+    reason: Missing output files: resources/1000G/ALL.chr7.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz
+    wildcards: contig=7
+    resources: mem_mb=3000, mem_mib=2862, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 38 has been submitted with SLURM jobid 7438531 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_download_chromosomes/7/7438531.log).
+
+[Thu Sep  5 16:49:37 2024]
+rule download_chromosomes:
+    output: resources/1000G/ALL.chr8.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/1000G/ALL.chr8.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz.tbi
+    jobid: 41
+    reason: Missing output files: resources/1000G/ALL.chr8.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz
+    wildcards: contig=8
+    resources: mem_mb=3000, mem_mib=2862, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 41 has been submitted with SLURM jobid 7438532 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_download_chromosomes/8/7438532.log).
+
+[Thu Sep  5 16:49:37 2024]
+rule download_chromosomes:
+    output: resources/1000G/ALL.chr9.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/1000G/ALL.chr9.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz.tbi
+    jobid: 44
+    reason: Missing output files: resources/1000G/ALL.chr9.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz
+    wildcards: contig=9
+    resources: mem_mb=3000, mem_mib=2862, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 44 has been submitted with SLURM jobid 7438533 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_download_chromosomes/9/7438533.log).
+
+[Thu Sep  5 16:49:37 2024]
+rule download_chromosomes:
+    output: resources/1000G/ALL.chr3.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/1000G/ALL.chr3.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz.tbi
+    jobid: 26
+    reason: Missing output files: resources/1000G/ALL.chr3.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz
+    wildcards: contig=3
+    resources: mem_mb=3000, mem_mib=2862, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 26 has been submitted with SLURM jobid 7438534 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_download_chromosomes/3/7438534.log).
+
+[Thu Sep  5 16:49:37 2024]
+rule download_chromosomes:
+    output: resources/1000G/ALL.chr5.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/1000G/ALL.chr5.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz.tbi
+    jobid: 32
+    reason: Missing output files: resources/1000G/ALL.chr5.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz
+    wildcards: contig=5
+    resources: mem_mb=3000, mem_mib=2862, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 32 has been submitted with SLURM jobid 7438535 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_download_chromosomes/5/7438535.log).
+
+[Thu Sep  5 16:49:37 2024]
+rule prepare_correct_x:
+    input: input_files/prepared_final_38.fam
+    output: results/pre_imputation_QC/prepared_xmerge.fam, results/pre_imputation_QC/prepared_xsplit.fam, results/pre_imputation_QC/prepared_xhetMiss.fam
+    jobid: 12
+    reason: Missing output files: results/pre_imputation_QC/prepared_xhetMiss.fam
+    resources: mem_mb=5000, mem_mib=4769, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig
+
+Job 12 has been submitted with SLURM jobid 7438536 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_correct_x/7438536.log).
+[Thu Sep  5 16:50:07 2024]
+Finished job 80.
+1 of 89 steps (1%) done
+[Thu Sep  5 16:50:07 2024]
+Finished job 83.
+2 of 89 steps (2%) done
+[Thu Sep  5 16:50:07 2024]
+Finished job 71.
+3 of 89 steps (3%) done
+[Thu Sep  5 16:50:07 2024]
+Finished job 84.
+4 of 89 steps (4%) done
+[Thu Sep  5 16:50:07 2024]
+Finished job 77.
+5 of 89 steps (6%) done
+[Thu Sep  5 16:50:07 2024]
+Finished job 12.
+6 of 89 steps (7%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Thu Sep  5 16:50:07 2024]
+rule genotyping05:
+    input: results/pre_imputation_QC/prepared_xhetMiss.fam
+    output: results/pre_imputation_QC/Geno05.fam
+    jobid: 11
+    reason: Missing output files: results/pre_imputation_QC/Geno05.fam; Input files updated by another job: results/pre_imputation_QC/prepared_xhetMiss.fam
+    resources: mem_mb=5000, mem_mib=4769, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig
+
+Job 11 has been submitted with SLURM jobid 7438547 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_genotyping05/7438547.log).
+[Thu Sep  5 16:50:16 2024]
+Finished job 68.
+7 of 89 steps (8%) done
+[Thu Sep  5 16:50:16 2024]
+Finished job 74.
+8 of 89 steps (9%) done
+[Thu Sep  5 16:50:16 2024]
+Finished job 62.
+9 of 89 steps (10%) done
+[Thu Sep  5 16:50:16 2024]
+Finished job 65.
+10 of 89 steps (11%) done
+[Thu Sep  5 16:50:16 2024]
+Finished job 53.
+11 of 89 steps (12%) done
+[Thu Sep  5 16:50:16 2024]
+Finished job 59.
+12 of 89 steps (13%) done
+[Thu Sep  5 16:50:16 2024]
+Finished job 38.
+13 of 89 steps (15%) done
+[Thu Sep  5 16:50:16 2024]
+Finished job 44.
+14 of 89 steps (16%) done
+[Thu Sep  5 16:50:16 2024]
+Finished job 26.
+15 of 89 steps (17%) done
+[Thu Sep  5 16:50:16 2024]
+Finished job 32.
+16 of 89 steps (18%) done
+[Thu Sep  5 16:50:16 2024]
+Finished job 11.
+17 of 89 steps (19%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Thu Sep  5 16:50:16 2024]
+rule SampleCallrate98_sex:
+    input: results/pre_imputation_QC/Geno05.fam
+    output: results/pre_imputation_QC/Geno05_SCRSex.fam
+    jobid: 10
+    reason: Missing output files: results/pre_imputation_QC/Geno05_SCRSex.fam; Input files updated by another job: results/pre_imputation_QC/Geno05.fam
+    resources: mem_mb=5000, mem_mib=4769, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig
+
+Job 10 has been submitted with SLURM jobid 7438548 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_SampleCallrate98_sex/7438548.log).
+[Thu Sep  5 16:50:26 2024]
+Finished job 19.
+18 of 89 steps (20%) done
+[Thu Sep  5 16:50:26 2024]
+Finished job 50.
+19 of 89 steps (21%) done
+[Thu Sep  5 16:50:26 2024]
+Finished job 56.
+20 of 89 steps (22%) done
+[Thu Sep  5 16:50:26 2024]
+Finished job 35.
+21 of 89 steps (24%) done
+[Thu Sep  5 16:50:26 2024]
+Finished job 47.
+22 of 89 steps (25%) done
+[Thu Sep  5 16:50:26 2024]
+Finished job 41.
+23 of 89 steps (26%) done
+[Thu Sep  5 16:50:26 2024]
+Finished job 10.
+24 of 89 steps (27%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Thu Sep  5 16:50:26 2024]
+rule filter_sex_checked:
+    input: results/pre_imputation_QC/Geno05_SCRSex.fam
+    output: results/pre_imputation_QC/sex_check_problem_sex.txt, results/pre_imputation_QC/sex_check_problem_ids.txt, results/pre_imputation_QC/Geno05_SCRSex_checked.fam
+    jobid: 9
+    reason: Missing output files: results/pre_imputation_QC/Geno05_SCRSex_checked.fam; Input files updated by another job: results/pre_imputation_QC/Geno05_SCRSex.fam
+    resources: mem_mb=5000, mem_mib=4769, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig
+
+Job 9 has been submitted with SLURM jobid 7438549 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_filter_sex_checked/7438549.log).
+[Thu Sep  5 16:50:36 2024]
+Finished job 29.
+25 of 89 steps (28%) done
+[Thu Sep  5 16:50:36 2024]
+Finished job 9.
+26 of 89 steps (29%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Thu Sep  5 16:50:36 2024]
+rule get_heterozygosity:
+    input: results/pre_imputation_QC/Geno05_SCRSex_checked.fam
+    output: results/pre_imputation_QC/Geno05_SCRSex_checked_cases.het, results/pre_imputation_QC/Geno05_SCRSex_checked_controls.het
+    jobid: 8
+    reason: Missing output files: results/pre_imputation_QC/Geno05_SCRSex_checked_cases.het, results/pre_imputation_QC/Geno05_SCRSex_checked_controls.het; Input files updated by another job: results/pre_imputation_QC/Geno05_SCRSex_checked.fam
+    resources: mem_mb=5000, mem_mib=4769, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig
+
+Job 8 has been submitted with SLURM jobid 7438550 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_get_heterozygosity/7438550.log).
+[Thu Sep  5 16:50:46 2024]
+Finished job 23.
+27 of 89 steps (30%) done
+[Thu Sep  5 16:50:56 2024]
+Finished job 8.
+28 of 89 steps (31%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Thu Sep  5 16:50:56 2024]
+rule check_heterozygosity:
+    input: results/pre_imputation_QC/Geno05_SCRSex_checked_cases.het, results/pre_imputation_QC/Geno05_SCRSex_checked_controls.het
+    output: results/pre_imputation_QC/Geno05_CRSex_checked_het_exclude.txt
+    jobid: 7
+    reason: Missing output files: results/pre_imputation_QC/Geno05_CRSex_checked_het_exclude.txt; Input files updated by another job: results/pre_imputation_QC/Geno05_SCRSex_checked_cases.het, results/pre_imputation_QC/Geno05_SCRSex_checked_controls.het
+    resources: mem_mb=5000, mem_mib=4769, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig
+
+Job 7 has been submitted with SLURM jobid 7438551 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_check_heterozygosity/7438551.log).
+[Thu Sep  5 16:51:06 2024]
+Finished job 20.
+29 of 89 steps (33%) done
+Select jobs to execute...
+Execute 22 jobs...
+
+[Thu Sep  5 16:51:07 2024]
+rule prepare_1000G_for_ancestry_PCA_step1:
+    input: resources/1000G/ALL.chr1.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa
+    output: results/1000G/1000G_chr1.bcf
+    jobid: 18
+    reason: Missing output files: results/1000G/1000G_chr1.bcf; Input files updated by another job: resources/1000G/ALL.chr1.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa
+    wildcards: contig=1
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=8029, disk_mib=7658, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 18 has been submitted with SLURM jobid 7438553 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step1/1/7438553.log).
+
+[Thu Sep  5 16:51:07 2024]
+rule prepare_1000G_for_ancestry_PCA_step1:
+    input: resources/1000G/ALL.chr10.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa
+    output: results/1000G/1000G_chr10.bcf
+    jobid: 46
+    reason: Missing output files: results/1000G/1000G_chr10.bcf; Input files updated by another job: resources/1000G/ALL.chr10.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa
+    wildcards: contig=10
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=7396, disk_mib=7054, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 46 has been submitted with SLURM jobid 7438554 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step1/10/7438554.log).
+
+[Thu Sep  5 16:51:07 2024]
+rule prepare_1000G_for_ancestry_PCA_step1:
+    input: resources/1000G/ALL.chr13.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa
+    output: results/1000G/1000G_chr13.bcf
+    jobid: 55
+    reason: Missing output files: results/1000G/1000G_chr13.bcf; Input files updated by another job: resources/1000G/ALL.chr13.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa
+    wildcards: contig=13
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=7061, disk_mib=6734, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 55 has been submitted with SLURM jobid 7438555 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step1/13/7438555.log).
+
+[Thu Sep  5 16:51:07 2024]
+rule prepare_1000G_for_ancestry_PCA_step1:
+    input: resources/1000G/ALL.chr17.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa
+    output: results/1000G/1000G_chr17.bcf
+    jobid: 67
+    reason: Missing output files: results/1000G/1000G_chr17.bcf; Input files updated by another job: resources/1000G/ALL.chr17.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa
+    wildcards: contig=17
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=6862, disk_mib=6545, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 67 has been submitted with SLURM jobid 7438556 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step1/17/7438556.log).
+
+[Thu Sep  5 16:51:07 2024]
+rule prepare_1000G_for_ancestry_PCA_step1:
+    input: resources/1000G/ALL.chr14.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa
+    output: results/1000G/1000G_chr14.bcf
+    jobid: 58
+    reason: Missing output files: results/1000G/1000G_chr14.bcf; Input files updated by another job: resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa, resources/1000G/ALL.chr14.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz
+    wildcards: contig=14
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=6979, disk_mib=6656, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 58 has been submitted with SLURM jobid 7438557 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step1/14/7438557.log).
+
+[Thu Sep  5 16:51:08 2024]
+rule prepare_1000G_for_ancestry_PCA_step1:
+    input: resources/1000G/ALL.chr2.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa
+    output: results/1000G/1000G_chr2.bcf
+    jobid: 22
+    reason: Missing output files: results/1000G/1000G_chr2.bcf; Input files updated by another job: resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa, resources/1000G/ALL.chr2.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz
+    wildcards: contig=2
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=8174, disk_mib=7796, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 22 has been submitted with SLURM jobid 7438558 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step1/2/7438558.log).
+
+[Thu Sep  5 16:51:08 2024]
+rule prepare_1000G_for_ancestry_PCA_step1:
+    input: resources/1000G/ALL.chr5.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa
+    output: results/1000G/1000G_chr5.bcf
+    jobid: 31
+    reason: Missing output files: results/1000G/1000G_chr5.bcf; Input files updated by another job: resources/1000G/ALL.chr5.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa
+    wildcards: contig=5
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=7721, disk_mib=7364, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 31 has been submitted with SLURM jobid 7438559 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step1/5/7438559.log).
+
+[Thu Sep  5 16:51:08 2024]
+rule prepare_1000G_for_ancestry_PCA_step1:
+    input: resources/1000G/ALL.chr16.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa
+    output: results/1000G/1000G_chr16.bcf
+    jobid: 64
+    reason: Missing output files: results/1000G/1000G_chr16.bcf; Input files updated by another job: resources/1000G/ALL.chr16.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa
+    wildcards: contig=16
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=6960, disk_mib=6638, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 64 has been submitted with SLURM jobid 7438560 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step1/16/7438560.log).
+
+[Thu Sep  5 16:51:08 2024]
+rule prepare_1000G_for_ancestry_PCA_step1:
+    input: resources/1000G/ALL.chr20.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa
+    output: results/1000G/1000G_chr20.bcf
+    jobid: 76
+    reason: Missing output files: results/1000G/1000G_chr20.bcf; Input files updated by another job: resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa, resources/1000G/ALL.chr20.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz
+    wildcards: contig=20
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=6762, disk_mib=6449, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 76 has been submitted with SLURM jobid 7438561 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step1/20/7438561.log).
+
+[Thu Sep  5 16:51:08 2024]
+rule prepare_1000G_for_ancestry_PCA_step1:
+    input: resources/1000G/ALL.chr3.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa
+    output: results/1000G/1000G_chr3.bcf
+    jobid: 25
+    reason: Missing output files: results/1000G/1000G_chr3.bcf; Input files updated by another job: resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa, resources/1000G/ALL.chr3.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz
+    wildcards: contig=3
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=7882, disk_mib=7517, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 25 has been submitted with SLURM jobid 7438562 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step1/3/7438562.log).
+
+[Thu Sep  5 16:51:08 2024]
+rule prepare_1000G_for_ancestry_PCA_step1:
+    input: resources/1000G/ALL.chr7.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa
+    output: results/1000G/1000G_chr7.bcf
+    jobid: 37
+    reason: Missing output files: results/1000G/1000G_chr7.bcf; Input files updated by another job: resources/1000G/ALL.chr7.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa
+    wildcards: contig=7
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=7580, disk_mib=7229, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 37 has been submitted with SLURM jobid 7438563 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step1/7/7438563.log).
+
+[Thu Sep  5 16:51:09 2024]
+rule prepare_1000G_for_ancestry_PCA_step1:
+    input: resources/1000G/ALL.chr4.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa
+    output: results/1000G/1000G_chr4.bcf
+    jobid: 28
+    reason: Missing output files: results/1000G/1000G_chr4.bcf; Input files updated by another job: resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa, resources/1000G/ALL.chr4.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz
+    wildcards: contig=4
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=7888, disk_mib=7523, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 28 has been submitted with SLURM jobid 7438564 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step1/4/7438564.log).
+
+[Thu Sep  5 16:51:09 2024]
+rule prepare_1000G_for_ancestry_PCA_step1:
+    input: resources/1000G/ALL.chr11.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa
+    output: results/1000G/1000G_chr11.bcf
+    jobid: 49
+    reason: Missing output files: results/1000G/1000G_chr11.bcf; Input files updated by another job: resources/1000G/ALL.chr11.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa
+    wildcards: contig=11
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=7372, disk_mib=7031, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 49 has been submitted with SLURM jobid 7438565 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step1/11/7438565.log).
+
+[Thu Sep  5 16:51:09 2024]
+rule prepare_1000G_for_ancestry_PCA_step1:
+    input: resources/1000G/ALL.chr15.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa
+    output: results/1000G/1000G_chr15.bcf
+    jobid: 61
+    reason: Missing output files: results/1000G/1000G_chr15.bcf; Input files updated by another job: resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa, resources/1000G/ALL.chr15.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz
+    wildcards: contig=15
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=6902, disk_mib=6583, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 61 has been submitted with SLURM jobid 7438566 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step1/15/7438566.log).
+
+[Thu Sep  5 16:51:09 2024]
+rule prepare_1000G_for_ancestry_PCA_step1:
+    input: resources/1000G/ALL.chr9.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa
+    output: results/1000G/1000G_chr9.bcf
+    jobid: 43
+    reason: Missing output files: results/1000G/1000G_chr9.bcf; Input files updated by another job: resources/1000G/ALL.chr9.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa
+    wildcards: contig=9
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=7230, disk_mib=6896, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 43 has been submitted with SLURM jobid 7438567 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step1/9/7438567.log).
+
+[Thu Sep  5 16:51:09 2024]
+rule prepare_1000G_for_ancestry_PCA_step1:
+    input: resources/1000G/ALL.chr8.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa
+    output: results/1000G/1000G_chr8.bcf
+    jobid: 40
+    reason: Missing output files: results/1000G/1000G_chr8.bcf; Input files updated by another job: resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa, resources/1000G/ALL.chr8.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz
+    wildcards: contig=8
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=7520, disk_mib=7172, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 40 has been submitted with SLURM jobid 7438568 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step1/8/7438568.log).
+
+[Thu Sep  5 16:51:10 2024]
+rule prepare_1000G_for_ancestry_PCA_step1:
+    input: resources/1000G/ALL.chr6.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa
+    output: results/1000G/1000G_chr6.bcf
+    jobid: 34
+    reason: Missing output files: results/1000G/1000G_chr6.bcf; Input files updated by another job: resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa, resources/1000G/ALL.chr6.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz
+    wildcards: contig=6
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=7722, disk_mib=7365, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 34 has been submitted with SLURM jobid 7438569 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step1/6/7438569.log).
+
+[Thu Sep  5 16:51:10 2024]
+rule prepare_1000G_for_ancestry_PCA_step1:
+    input: resources/1000G/ALL.chr19.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa
+    output: results/1000G/1000G_chr19.bcf
+    jobid: 73
+    reason: Missing output files: results/1000G/1000G_chr19.bcf; Input files updated by another job: resources/1000G/ALL.chr19.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa
+    wildcards: contig=19
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=6757, disk_mib=6444, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 73 has been submitted with SLURM jobid 7438570 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step1/19/7438570.log).
+
+[Thu Sep  5 16:51:10 2024]
+rule prepare_1000G_for_ancestry_PCA_step1:
+    input: resources/1000G/ALL.chr12.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa
+    output: results/1000G/1000G_chr12.bcf
+    jobid: 52
+    reason: Missing output files: results/1000G/1000G_chr12.bcf; Input files updated by another job: resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa, resources/1000G/ALL.chr12.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz
+    wildcards: contig=12
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=7334, disk_mib=6995, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 52 has been submitted with SLURM jobid 7438571 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step1/12/7438571.log).
+
+[Thu Sep  5 16:51:10 2024]
+rule prepare_1000G_for_ancestry_PCA_step1:
+    input: resources/1000G/ALL.chr18.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa
+    output: results/1000G/1000G_chr18.bcf
+    jobid: 70
+    reason: Missing output files: results/1000G/1000G_chr18.bcf; Input files updated by another job: resources/1000G/ALL.chr18.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa
+    wildcards: contig=18
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=6882, disk_mib=6564, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 70 has been submitted with SLURM jobid 7438572 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step1/18/7438572.log).
+
+[Thu Sep  5 16:51:10 2024]
+rule prepare_1000G_for_ancestry_PCA_step1:
+    input: resources/1000G/ALL.chr22.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa
+    output: results/1000G/1000G_chr22.bcf
+    jobid: 82
+    reason: Missing output files: results/1000G/1000G_chr22.bcf; Input files updated by another job: resources/1000G/ALL.chr22.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa
+    wildcards: contig=22
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=6548, disk_mib=6245, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 82 has been submitted with SLURM jobid 7438573 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step1/22/7438573.log).
+
+[Thu Sep  5 16:51:11 2024]
+rule prepare_1000G_for_ancestry_PCA_step1:
+    input: resources/1000G/ALL.chr21.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa
+    output: results/1000G/1000G_chr21.bcf
+    jobid: 79
+    reason: Missing output files: results/1000G/1000G_chr21.bcf; Input files updated by another job: resources/1000G/ALL.chr21.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz, resources/fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa
+    wildcards: contig=21
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=6550, disk_mib=6247, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 79 has been submitted with SLURM jobid 7438574 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step1/21/7438574.log).
+[Thu Sep  5 16:51:17 2024]
+Finished job 7.
+30 of 89 steps (34%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Thu Sep  5 16:51:17 2024]
+rule filter_het_samples:
+    input: results/pre_imputation_QC/Geno05_CRSex_checked_het_exclude.txt, results/pre_imputation_QC/Geno05_SCRSex_checked.fam
+    output: results/pre_imputation_QC/het_exclude_ids.txt, results/pre_imputation_QC/Geno05_SCRSex_checked_het.fam
+    jobid: 6
+    reason: Missing output files: results/pre_imputation_QC/Geno05_SCRSex_checked_het.fam; Input files updated by another job: results/pre_imputation_QC/Geno05_SCRSex_checked.fam, results/pre_imputation_QC/Geno05_CRSex_checked_het_exclude.txt
+    resources: mem_mb=5000, mem_mib=4769, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig
+
+Job 6 has been submitted with SLURM jobid 7438575 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_filter_het_samples/7438575.log).
+[Thu Sep  5 16:51:27 2024]
+Finished job 6.
+31 of 89 steps (35%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Thu Sep  5 16:51:27 2024]
+rule VariantCallrate98:
+    input: results/pre_imputation_QC/Geno05_SCRSex_checked_het.fam
+    output: results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR.fam
+    jobid: 5
+    reason: Missing output files: results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR.fam; Input files updated by another job: results/pre_imputation_QC/Geno05_SCRSex_checked_het.fam
+    resources: mem_mb=5000, mem_mib=4769, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig
+
+Job 5 has been submitted with SLURM jobid 7438576 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_VariantCallrate98/7438576.log).
+[Thu Sep  5 16:51:37 2024]
+Finished job 5.
+32 of 89 steps (36%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Thu Sep  5 16:51:37 2024]
+rule get_MissDiff_HWE:
+    input: results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR.fam
+    output: results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_case.lmiss, results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_con.lmiss, results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_all.hwe, results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_female.hwe
+    jobid: 14
+    reason: Missing output files: results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_all.hwe, results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_con.lmiss, results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_female.hwe, results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_case.lmiss; Input files updated by another job: results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR.fam
+    resources: mem_mb=5000, mem_mib=4769, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig
+
+Job 14 has been submitted with SLURM jobid 7438579 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_get_MissDiff_HWE/7438579.log).
+[Thu Sep  5 16:51:47 2024]
+Finished job 14.
+33 of 89 steps (37%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Thu Sep  5 16:51:47 2024]
+rule check_MissDiff_HWE:
+    input: results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_case.lmiss, results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_con.lmiss, results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_all.hwe, results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_female.hwe
+    output: results/pre_imputation_QC/remove_missingness_hwe.txt
+    jobid: 13
+    reason: Missing output files: results/pre_imputation_QC/remove_missingness_hwe.txt; Input files updated by another job: results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_all.hwe, results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_con.lmiss, results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_female.hwe, results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_case.lmiss
+    resources: mem_mb=5000, mem_mib=4769, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig
+
+Job 13 has been submitted with SLURM jobid 7438580 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_check_MissDiff_HWE/7438580.log).
+[Thu Sep  5 16:52:17 2024]
+Finished job 13.
+34 of 89 steps (38%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Thu Sep  5 16:52:17 2024]
+rule filter_MissDiff_HWE:
+    input: results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR.fam, results/pre_imputation_QC/remove_missingness_hwe.txt
+    output: results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam
+    jobid: 4
+    reason: Missing output files: results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam; Input files updated by another job: results/pre_imputation_QC/remove_missingness_hwe.txt, results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR.fam
+    resources: mem_mb=5000, mem_mib=4769, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig
+
+Job 4 has been submitted with SLURM jobid 7438581 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_filter_MissDiff_HWE/7438581.log).
+[Thu Sep  5 16:52:27 2024]
+Finished job 4.
+35 of 89 steps (39%) done
+[Thu Sep  5 16:53:27 2024]
+Finished job 82.
+36 of 89 steps (40%) done
+[Thu Sep  5 16:53:27 2024]
+Finished job 79.
+37 of 89 steps (42%) done
+Select jobs to execute...
+Execute 2 jobs...
+
+[Thu Sep  5 16:53:27 2024]
+rule prepare_1000G_for_ancestry_PCA_step2:
+    input: results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam, results/1000G/1000G_chr21.bcf
+    output: results/1000G/1000G_chr21.vars, results/1000G/1000G_chr21_pruned.bed
+    jobid: 78
+    reason: Missing output files: results/1000G/1000G_chr21_pruned.bed; Input files updated by another job: results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam, results/1000G/1000G_chr21.bcf
+    wildcards: contig=21
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 78 has been submitted with SLURM jobid 7438584 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step2/21/7438584.log).
+
+[Thu Sep  5 16:53:27 2024]
+rule prepare_1000G_for_ancestry_PCA_step2:
+    input: results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam, results/1000G/1000G_chr22.bcf
+    output: results/1000G/1000G_chr22.vars, results/1000G/1000G_chr22_pruned.bed
+    jobid: 81
+    reason: Missing output files: results/1000G/1000G_chr22_pruned.bed; Input files updated by another job: results/1000G/1000G_chr22.bcf, results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam
+    wildcards: contig=22
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 81 has been submitted with SLURM jobid 7438585 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step2/22/7438585.log).
+[Thu Sep  5 16:53:37 2024]
+Finished job 78.
+38 of 89 steps (43%) done
+[Thu Sep  5 16:53:47 2024]
+Finished job 81.
+39 of 89 steps (44%) done
+[Thu Sep  5 16:54:48 2024]
+Finished job 76.
+40 of 89 steps (45%) done
+[Thu Sep  5 16:54:48 2024]
+Finished job 73.
+41 of 89 steps (46%) done
+Select jobs to execute...
+Execute 2 jobs...
+
+[Thu Sep  5 16:54:48 2024]
+rule prepare_1000G_for_ancestry_PCA_step2:
+    input: results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam, results/1000G/1000G_chr19.bcf
+    output: results/1000G/1000G_chr19.vars, results/1000G/1000G_chr19_pruned.bed
+    jobid: 72
+    reason: Missing output files: results/1000G/1000G_chr19_pruned.bed; Input files updated by another job: results/1000G/1000G_chr19.bcf, results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam
+    wildcards: contig=19
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 72 has been submitted with SLURM jobid 7438606 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step2/19/7438606.log).
+
+[Thu Sep  5 16:54:48 2024]
+rule prepare_1000G_for_ancestry_PCA_step2:
+    input: results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam, results/1000G/1000G_chr20.bcf
+    output: results/1000G/1000G_chr20.vars, results/1000G/1000G_chr20_pruned.bed
+    jobid: 75
+    reason: Missing output files: results/1000G/1000G_chr20_pruned.bed; Input files updated by another job: results/1000G/1000G_chr20.bcf, results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam
+    wildcards: contig=20
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 75 has been submitted with SLURM jobid 7438607 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step2/20/7438607.log).
+[Thu Sep  5 16:55:18 2024]
+Finished job 61.
+42 of 89 steps (47%) done
+[Thu Sep  5 16:55:18 2024]
+Finished job 70.
+43 of 89 steps (48%) done
+[Thu Sep  5 16:55:18 2024]
+Finished job 72.
+44 of 89 steps (49%) done
+[Thu Sep  5 16:55:18 2024]
+Finished job 75.
+45 of 89 steps (51%) done
+Select jobs to execute...
+Execute 2 jobs...
+
+[Thu Sep  5 16:55:18 2024]
+rule prepare_1000G_for_ancestry_PCA_step2:
+    input: results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam, results/1000G/1000G_chr15.bcf
+    output: results/1000G/1000G_chr15.vars, results/1000G/1000G_chr15_pruned.bed
+    jobid: 60
+    reason: Missing output files: results/1000G/1000G_chr15_pruned.bed; Input files updated by another job: results/1000G/1000G_chr15.bcf, results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam
+    wildcards: contig=15
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 60 has been submitted with SLURM jobid 7438608 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step2/15/7438608.log).
+
+[Thu Sep  5 16:55:18 2024]
+rule prepare_1000G_for_ancestry_PCA_step2:
+    input: results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam, results/1000G/1000G_chr18.bcf
+    output: results/1000G/1000G_chr18.vars, results/1000G/1000G_chr18_pruned.bed
+    jobid: 69
+    reason: Missing output files: results/1000G/1000G_chr18_pruned.bed; Input files updated by another job: results/1000G/1000G_chr18.bcf, results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam
+    wildcards: contig=18
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 69 has been submitted with SLURM jobid 7438609 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step2/18/7438609.log).
+[Thu Sep  5 16:55:28 2024]
+Finished job 67.
+46 of 89 steps (52%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Thu Sep  5 16:55:28 2024]
+rule prepare_1000G_for_ancestry_PCA_step2:
+    input: results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam, results/1000G/1000G_chr17.bcf
+    output: results/1000G/1000G_chr17.vars, results/1000G/1000G_chr17_pruned.bed
+    jobid: 66
+    reason: Missing output files: results/1000G/1000G_chr17_pruned.bed; Input files updated by another job: results/1000G/1000G_chr17.bcf, results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam
+    wildcards: contig=17
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 66 has been submitted with SLURM jobid 7438610 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step2/17/7438610.log).
+[Thu Sep  5 16:55:38 2024]
+Finished job 64.
+47 of 89 steps (53%) done
+[Thu Sep  5 16:55:38 2024]
+Finished job 60.
+48 of 89 steps (54%) done
+[Thu Sep  5 16:55:38 2024]
+Finished job 69.
+49 of 89 steps (55%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Thu Sep  5 16:55:38 2024]
+rule prepare_1000G_for_ancestry_PCA_step2:
+    input: results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam, results/1000G/1000G_chr16.bcf
+    output: results/1000G/1000G_chr16.vars, results/1000G/1000G_chr16_pruned.bed
+    jobid: 63
+    reason: Missing output files: results/1000G/1000G_chr16_pruned.bed; Input files updated by another job: results/1000G/1000G_chr16.bcf, results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam
+    wildcards: contig=16
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 63 has been submitted with SLURM jobid 7438612 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step2/16/7438612.log).
+[Thu Sep  5 16:55:48 2024]
+Finished job 66.
+50 of 89 steps (56%) done
+[Thu Sep  5 16:55:58 2024]
+Finished job 63.
+51 of 89 steps (57%) done
+[Thu Sep  5 16:56:08 2024]
+Finished job 58.
+52 of 89 steps (58%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Thu Sep  5 16:56:08 2024]
+rule prepare_1000G_for_ancestry_PCA_step2:
+    input: results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam, results/1000G/1000G_chr14.bcf
+    output: results/1000G/1000G_chr14.vars, results/1000G/1000G_chr14_pruned.bed
+    jobid: 57
+    reason: Missing output files: results/1000G/1000G_chr14_pruned.bed; Input files updated by another job: results/1000G/1000G_chr14.bcf, results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam
+    wildcards: contig=14
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 57 has been submitted with SLURM jobid 7438614 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step2/14/7438614.log).
+[Thu Sep  5 16:56:38 2024]
+Finished job 55.
+53 of 89 steps (60%) done
+[Thu Sep  5 16:56:38 2024]
+Finished job 57.
+54 of 89 steps (61%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Thu Sep  5 16:56:38 2024]
+rule prepare_1000G_for_ancestry_PCA_step2:
+    input: results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam, results/1000G/1000G_chr13.bcf
+    output: results/1000G/1000G_chr13.vars, results/1000G/1000G_chr13_pruned.bed
+    jobid: 54
+    reason: Missing output files: results/1000G/1000G_chr13_pruned.bed; Input files updated by another job: results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam, results/1000G/1000G_chr13.bcf
+    wildcards: contig=13
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 54 has been submitted with SLURM jobid 7438625 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step2/13/7438625.log).
+[Thu Sep  5 16:57:09 2024]
+Finished job 43.
+55 of 89 steps (62%) done
+[Thu Sep  5 16:57:09 2024]
+Finished job 54.
+56 of 89 steps (63%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Thu Sep  5 16:57:09 2024]
+rule prepare_1000G_for_ancestry_PCA_step2:
+    input: results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam, results/1000G/1000G_chr9.bcf
+    output: results/1000G/1000G_chr9.vars, results/1000G/1000G_chr9_pruned.bed
+    jobid: 42
+    reason: Missing output files: results/1000G/1000G_chr9_pruned.bed; Input files updated by another job: results/1000G/1000G_chr9.bcf, results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam
+    wildcards: contig=9
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 42 has been submitted with SLURM jobid 7438626 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step2/9/7438626.log).
+[Thu Sep  5 16:57:39 2024]
+Finished job 52.
+57 of 89 steps (64%) done
+[Thu Sep  5 16:57:39 2024]
+Finished job 42.
+58 of 89 steps (65%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Thu Sep  5 16:57:39 2024]
+rule prepare_1000G_for_ancestry_PCA_step2:
+    input: results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam, results/1000G/1000G_chr12.bcf
+    output: results/1000G/1000G_chr12.vars, results/1000G/1000G_chr12_pruned.bed
+    jobid: 51
+    reason: Missing output files: results/1000G/1000G_chr12_pruned.bed; Input files updated by another job: results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam, results/1000G/1000G_chr12.bcf
+    wildcards: contig=12
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 51 has been submitted with SLURM jobid 7438627 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step2/12/7438627.log).
+[Thu Sep  5 16:58:09 2024]
+Finished job 49.
+59 of 89 steps (66%) done
+[Thu Sep  5 16:58:09 2024]
+Finished job 51.
+60 of 89 steps (67%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Thu Sep  5 16:58:09 2024]
+rule prepare_1000G_for_ancestry_PCA_step2:
+    input: results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam, results/1000G/1000G_chr11.bcf
+    output: results/1000G/1000G_chr11.vars, results/1000G/1000G_chr11_pruned.bed
+    jobid: 48
+    reason: Missing output files: results/1000G/1000G_chr11_pruned.bed; Input files updated by another job: results/1000G/1000G_chr11.bcf, results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam
+    wildcards: contig=11
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 48 has been submitted with SLURM jobid 7438628 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step2/11/7438628.log).
+[Thu Sep  5 16:58:39 2024]
+Finished job 40.
+61 of 89 steps (69%) done
+[Thu Sep  5 16:58:39 2024]
+Finished job 48.
+62 of 89 steps (70%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Thu Sep  5 16:58:39 2024]
+rule prepare_1000G_for_ancestry_PCA_step2:
+    input: results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam, results/1000G/1000G_chr8.bcf
+    output: results/1000G/1000G_chr8.vars, results/1000G/1000G_chr8_pruned.bed
+    jobid: 39
+    reason: Missing output files: results/1000G/1000G_chr8_pruned.bed; Input files updated by another job: results/1000G/1000G_chr8.bcf, results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam
+    wildcards: contig=8
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 39 has been submitted with SLURM jobid 7438629 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step2/8/7438629.log).
+[Thu Sep  5 16:58:49 2024]
+Finished job 46.
+63 of 89 steps (71%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Thu Sep  5 16:58:49 2024]
+rule prepare_1000G_for_ancestry_PCA_step2:
+    input: results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam, results/1000G/1000G_chr10.bcf
+    output: results/1000G/1000G_chr10.vars, results/1000G/1000G_chr10_pruned.bed
+    jobid: 45
+    reason: Missing output files: results/1000G/1000G_chr10_pruned.bed; Input files updated by another job: results/1000G/1000G_chr10.bcf, results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam
+    wildcards: contig=10
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 45 has been submitted with SLURM jobid 7438630 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step2/10/7438630.log).
+[Thu Sep  5 16:58:59 2024]
+Finished job 37.
+64 of 89 steps (72%) done
+[Thu Sep  5 16:58:59 2024]
+Finished job 39.
+65 of 89 steps (73%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Thu Sep  5 16:58:59 2024]
+rule prepare_1000G_for_ancestry_PCA_step2:
+    input: results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam, results/1000G/1000G_chr7.bcf
+    output: results/1000G/1000G_chr7.vars, results/1000G/1000G_chr7_pruned.bed
+    jobid: 36
+    reason: Missing output files: results/1000G/1000G_chr7_pruned.bed; Input files updated by another job: results/1000G/1000G_chr7.bcf, results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam
+    wildcards: contig=7
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 36 has been submitted with SLURM jobid 7438636 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step2/7/7438636.log).
+[Thu Sep  5 16:59:09 2024]
+Finished job 45.
+66 of 89 steps (74%) done
+[Thu Sep  5 16:59:39 2024]
+Finished job 34.
+67 of 89 steps (75%) done
+[Thu Sep  5 16:59:39 2024]
+Finished job 36.
+68 of 89 steps (76%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Thu Sep  5 16:59:39 2024]
+rule prepare_1000G_for_ancestry_PCA_step2:
+    input: results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam, results/1000G/1000G_chr6.bcf
+    output: results/1000G/1000G_chr6.vars, results/1000G/1000G_chr6_pruned.bed
+    jobid: 33
+    reason: Missing output files: results/1000G/1000G_chr6_pruned.bed; Input files updated by another job: results/1000G/1000G_chr6.bcf, results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam
+    wildcards: contig=6
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 33 has been submitted with SLURM jobid 7438637 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step2/6/7438637.log).
+[Thu Sep  5 16:59:49 2024]
+Finished job 31.
+69 of 89 steps (78%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Thu Sep  5 16:59:49 2024]
+rule prepare_1000G_for_ancestry_PCA_step2:
+    input: results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam, results/1000G/1000G_chr5.bcf
+    output: results/1000G/1000G_chr5.vars, results/1000G/1000G_chr5_pruned.bed
+    jobid: 30
+    reason: Missing output files: results/1000G/1000G_chr5_pruned.bed; Input files updated by another job: results/1000G/1000G_chr5.bcf, results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam
+    wildcards: contig=5
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 30 has been submitted with SLURM jobid 7438638 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step2/5/7438638.log).
+[Thu Sep  5 17:00:20 2024]
+Finished job 33.
+70 of 89 steps (79%) done
+[Thu Sep  5 17:00:20 2024]
+Finished job 30.
+71 of 89 steps (80%) done
+[Thu Sep  5 17:00:50 2024]
+Finished job 25.
+72 of 89 steps (81%) done
+[Thu Sep  5 17:00:50 2024]
+Finished job 28.
+73 of 89 steps (82%) done
+Select jobs to execute...
+Execute 2 jobs...
+
+[Thu Sep  5 17:00:50 2024]
+rule prepare_1000G_for_ancestry_PCA_step2:
+    input: results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam, results/1000G/1000G_chr3.bcf
+    output: results/1000G/1000G_chr3.vars, results/1000G/1000G_chr3_pruned.bed
+    jobid: 24
+    reason: Missing output files: results/1000G/1000G_chr3_pruned.bed; Input files updated by another job: results/1000G/1000G_chr3.bcf, results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam
+    wildcards: contig=3
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 24 has been submitted with SLURM jobid 7438643 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step2/3/7438643.log).
+
+[Thu Sep  5 17:00:50 2024]
+rule prepare_1000G_for_ancestry_PCA_step2:
+    input: results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam, results/1000G/1000G_chr4.bcf
+    output: results/1000G/1000G_chr4.vars, results/1000G/1000G_chr4_pruned.bed
+    jobid: 27
+    reason: Missing output files: results/1000G/1000G_chr4_pruned.bed; Input files updated by another job: results/1000G/1000G_chr4.bcf, results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam
+    wildcards: contig=4
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 27 has been submitted with SLURM jobid 7438644 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step2/4/7438644.log).
+[Thu Sep  5 17:01:20 2024]
+Finished job 24.
+74 of 89 steps (83%) done
+[Thu Sep  5 17:01:20 2024]
+Finished job 27.
+75 of 89 steps (84%) done
+[Thu Sep  5 17:02:20 2024]
+Finished job 18.
+76 of 89 steps (85%) done
+[Thu Sep  5 17:02:20 2024]
+Finished job 22.
+77 of 89 steps (87%) done
+Select jobs to execute...
+Execute 2 jobs...
+
+[Thu Sep  5 17:02:20 2024]
+rule prepare_1000G_for_ancestry_PCA_step2:
+    input: results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam, results/1000G/1000G_chr1.bcf
+    output: results/1000G/1000G_chr1.vars, results/1000G/1000G_chr1_pruned.bed
+    jobid: 17
+    reason: Missing output files: results/1000G/1000G_chr1_pruned.bed; Input files updated by another job: results/1000G/1000G_chr1.bcf, results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam
+    wildcards: contig=1
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 17 has been submitted with SLURM jobid 7438645 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step2/1/7438645.log).
+
+[Thu Sep  5 17:02:20 2024]
+rule prepare_1000G_for_ancestry_PCA_step2:
+    input: results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam, results/1000G/1000G_chr2.bcf
+    output: results/1000G/1000G_chr2.vars, results/1000G/1000G_chr2_pruned.bed
+    jobid: 21
+    reason: Missing output files: results/1000G/1000G_chr2_pruned.bed; Input files updated by another job: results/1000G/1000G_chr2.bcf, results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam
+    wildcards: contig=2
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 21 has been submitted with SLURM jobid 7438646 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_prepare_1000G_for_ancestry_PCA_step2/2/7438646.log).
+[Thu Sep  5 17:02:50 2024]
+Finished job 17.
+78 of 89 steps (88%) done
+[Thu Sep  5 17:02:50 2024]
+Finished job 21.
+79 of 89 steps (89%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Thu Sep  5 17:02:50 2024]
+rule merge_data_w_1000G_run_PCA:
+    input: results/1000G/1000G_chr1_pruned.bed, results/1000G/1000G_chr2_pruned.bed, results/1000G/1000G_chr3_pruned.bed, results/1000G/1000G_chr4_pruned.bed, results/1000G/1000G_chr5_pruned.bed, results/1000G/1000G_chr6_pruned.bed, results/1000G/1000G_chr7_pruned.bed, results/1000G/1000G_chr8_pruned.bed, results/1000G/1000G_chr9_pruned.bed, results/1000G/1000G_chr10_pruned.bed, results/1000G/1000G_chr11_pruned.bed, results/1000G/1000G_chr12_pruned.bed, results/1000G/1000G_chr13_pruned.bed, results/1000G/1000G_chr14_pruned.bed, results/1000G/1000G_chr15_pruned.bed, results/1000G/1000G_chr16_pruned.bed, results/1000G/1000G_chr17_pruned.bed, results/1000G/1000G_chr18_pruned.bed, results/1000G/1000G_chr19_pruned.bed, results/1000G/1000G_chr20_pruned.bed, results/1000G/1000G_chr21_pruned.bed, results/1000G/1000G_chr22_pruned.bed, results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam, results/PCA/20130606_g1k.ped
+    output: results/1000G/merge_list.txt, results/PCA/MergeFullForPCA.bim, results/PCA/pca.eigenvec
+    jobid: 16
+    reason: Missing output files: results/PCA/pca.eigenvec; Input files updated by another job: results/1000G/1000G_chr13_pruned.bed, results/1000G/1000G_chr2_pruned.bed, results/1000G/1000G_chr5_pruned.bed, results/1000G/1000G_chr12_pruned.bed, results/1000G/1000G_chr18_pruned.bed, results/1000G/1000G_chr14_pruned.bed, results/1000G/1000G_chr15_pruned.bed, results/1000G/1000G_chr6_pruned.bed, results/1000G/1000G_chr7_pruned.bed, results/PCA/20130606_g1k.ped, results/1000G/1000G_chr17_pruned.bed, results/1000G/1000G_chr4_pruned.bed, results/1000G/1000G_chr1_pruned.bed, results/1000G/1000G_chr20_pruned.bed, results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam, results/1000G/1000G_chr22_pruned.bed, results/1000G/1000G_chr9_pruned.bed, results/1000G/1000G_chr10_pruned.bed, results/1000G/1000G_chr8_pruned.bed, results/1000G/1000G_chr11_pruned.bed, results/1000G/1000G_chr3_pruned.bed, results/1000G/1000G_chr16_pruned.bed, results/1000G/1000G_chr21_pruned.bed, results/1000G/1000G_chr19_pruned.bed
+    resources: mem_mb=18000, mem_mib=17167, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig, cpus=1, time_job=720
+
+Job 16 has been submitted with SLURM jobid 7438647 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_merge_data_w_1000G_run_PCA/7438647.log).
+[Thu Sep  5 17:04:31 2024]
+Finished job 16.
+80 of 89 steps (90%) done
+Select jobs to execute...
+Execute 2 jobs...
+
+[Thu Sep  5 17:04:31 2024]
+rule make_pca_plots:
+    input: results/PCA/pca.eigenvec, results/PCA/20130606_g1k.ped
+    output: results/PCA/populations_PCA.html, results/PCA/populations.txt
+    jobid: 88
+    reason: Missing output files: results/PCA/populations.txt, results/PCA/populations_PCA.html; Input files updated by another job: results/PCA/20130606_g1k.ped, results/PCA/pca.eigenvec
+    resources: mem_mb=5000, mem_mib=4769, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig
+
+Job 88 has been submitted with SLURM jobid 7438650 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_make_pca_plots/7438650.log).
+
+[Thu Sep  5 17:04:31 2024]
+rule run_pca_filter:
+    input: results/PCA/pca.eigenvec
+    output: resources/eur_ids.txt, resources/non_eur_ids.txt
+    jobid: 15
+    reason: Missing output files: resources/non_eur_ids.txt, resources/eur_ids.txt; Input files updated by another job: results/PCA/pca.eigenvec
+    resources: mem_mb=5000, mem_mib=4769, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig
+
+Job 15 has been submitted with SLURM jobid 7438651 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_run_pca_filter/7438651.log).
+[Thu Sep  5 17:05:01 2024]
+Finished job 88.
+81 of 89 steps (91%) done
+[Thu Sep  5 17:05:01 2024]
+Finished job 15.
+82 of 89 steps (92%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Thu Sep  5 17:05:01 2024]
+rule filter_plink_for_ancestry:
+    input: results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam, resources/eur_ids.txt
+    output: results/PCA/non_europ_excluded.fam, results/PCA/cohort_eur.fam
+    jobid: 3
+    reason: Missing output files: results/PCA/cohort_eur.fam; Input files updated by another job: resources/eur_ids.txt, results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam
+    resources: mem_mb=5000, mem_mib=4769, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig
+
+Job 3 has been submitted with SLURM jobid 7438654 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_filter_plink_for_ancestry/7438654.log).
+[Thu Sep  5 17:05:11 2024]
+Finished job 3.
+83 of 89 steps (93%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Thu Sep  5 17:05:11 2024]
+rule kinship_analysis:
+    input: results/PCA/cohort_eur.fam
+    output: results/kinship/Geno05_CR_sex_snp_qc_snpqc2_EUR.kin, results/kinship/Geno05_CR_sex_snp_qc_snpqc2_EUR.kin0
+    jobid: 86
+    reason: Missing output files: results/kinship/Geno05_CR_sex_snp_qc_snpqc2_EUR.kin, results/kinship/Geno05_CR_sex_snp_qc_snpqc2_EUR.kin0; Input files updated by another job: results/PCA/cohort_eur.fam
+    resources: mem_mb=5000, mem_mib=4769, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig
+
+Job 86 has been submitted with SLURM jobid 7438655 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_kinship_analysis/7438655.log).
+[Thu Sep  5 17:06:51 2024]
+Finished job 86.
+84 of 89 steps (94%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Thu Sep  5 17:06:51 2024]
+rule kinship_analysis_R:
+    input: results/PCA/cohort_eur.fam, results/kinship/Geno05_CR_sex_snp_qc_snpqc2_EUR.kin, results/kinship/Geno05_CR_sex_snp_qc_snpqc2_EUR.kin0
+    output: results/kinship/keep_ids.fam
+    jobid: 85
+    reason: Missing output files: results/kinship/keep_ids.fam; Input files updated by another job: results/kinship/Geno05_CR_sex_snp_qc_snpqc2_EUR.kin, results/PCA/cohort_eur.fam, results/kinship/Geno05_CR_sex_snp_qc_snpqc2_EUR.kin0
+    resources: mem_mb=5000, mem_mib=4769, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig
+
+Job 85 has been submitted with SLURM jobid 7438663 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_kinship_analysis_R/7438663.log).
+[Thu Sep  5 17:07:21 2024]
+Finished job 85.
+85 of 89 steps (96%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Thu Sep  5 17:07:21 2024]
+rule remove_relateds:
+    input: results/PCA/cohort_eur.fam, results/kinship/keep_ids.fam
+    output: results/kinship/cohort_eur_unrelated.fam
+    jobid: 2
+    reason: Missing output files: results/kinship/cohort_eur_unrelated.fam; Input files updated by another job: results/kinship/keep_ids.fam, results/PCA/cohort_eur.fam
+    resources: mem_mb=5000, mem_mib=4769, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig
+
+Job 2 has been submitted with SLURM jobid 7438666 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_remove_relateds/7438666.log).
+[Thu Sep  5 17:07:52 2024]
+Finished job 2.
+86 of 89 steps (97%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Thu Sep  5 17:07:52 2024]
+rule kinship_check2:
+    input: results/kinship/cohort_eur_unrelated.fam
+    output: results/kinship/last_check_kinship.kin, results/kinship/last_check_kinship.kin0
+    jobid: 87
+    reason: Missing output files: results/kinship/last_check_kinship.kin, results/kinship/last_check_kinship.kin0; Input files updated by another job: results/kinship/cohort_eur_unrelated.fam
+    resources: mem_mb=5000, mem_mib=4769, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig
+
+Job 87 has been submitted with SLURM jobid 7438669 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_kinship_check2/7438669.log).
+[Thu Sep  5 17:09:32 2024]
+Finished job 87.
+87 of 89 steps (98%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Thu Sep  5 17:09:32 2024]
+rule kinship_check2_R:
+    input: results/kinship/cohort_eur_unrelated.fam, results/kinship/last_check_kinship.kin, results/kinship/last_check_kinship.kin0
+    output: results/kinship/last_check_kinship_keep_fam
+    jobid: 1
+    reason: Missing output files: results/kinship/last_check_kinship_keep_fam; Input files updated by another job: results/kinship/last_check_kinship.kin, results/kinship/last_check_kinship.kin0, results/kinship/cohort_eur_unrelated.fam
+    resources: mem_mb=5000, mem_mib=4769, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig
+
+Job 1 has been submitted with SLURM jobid 7438673 (log: /home/rtanavade/smk_plink_QC/.snakemake/slurm_logs/rule_kinship_check2_R/7438673.log).
+[Thu Sep  5 17:10:02 2024]
+Finished job 1.
+88 of 89 steps (99%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Thu Sep  5 17:10:02 2024]
+localrule all:
+    input: results/kinship/last_check_kinship_keep_fam, results/PCA/populations_PCA.html, results/PCA/populations.txt, resources/non_eur_ids.txt
+    jobid: 0
+    reason: Input files updated by another job: resources/non_eur_ids.txt, results/PCA/populations.txt, results/kinship/last_check_kinship_keep_fam, results/PCA/populations_PCA.html
+    resources: mem_mb=5000, mem_mib=4769, disk_mb=1000, disk_mib=954, tmpdir=/scratch/rtanavade_7438480, slurm_partition=short, tasks=1, cpus_per_task=1, runtime=480, slurm_account=ag_ukihg_ludwig
+
+[Thu Sep  5 17:10:02 2024]
+Finished job 0.
+89 of 89 steps (100%) done
+Complete log: .snakemake/log/2024-09-05T164730.749502.snakemake.log
