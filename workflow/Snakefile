@@ -6,7 +6,8 @@ rule all:
         "results/kinship/last_check_kinship_keep_fam",
         "results/PCA/populations_PCA.html",
         "results/PCA/populations.txt",       
-        "resources/non_eur_ids.txt"
+        "resources/non_eur_ids.txt",
+        "results/logs/pre_PCA.logs"
 
 rule prepare_correct_x:
     input:
@@ -41,6 +42,25 @@ rule prepare_correct_x:
         --set-hh-missing \
         --make-bed \
         --out {params.XhetMiss}
+       """
+ 
+rule logs:
+    input:
+       infile="results/pre_imputation_QC/{file_name}.log",
+    output:
+       logs="results/logs/pre_PCA.logs",
+    params:
+       log_in=lambda wildcards, input:input.infile,
+       output_prefix=lambda wildcards, input: wildcards.file_name,
+       info="please refer to specific files for more information",
+    conda: "envs/plink.yaml"
+    shell:
+        """
+        python workflow/scripts/update_log.py \
+        --input_log_file {params.log_in} \
+        --custom_logs {output.logs} \
+        --output_file_name {params.output_prefix} \
+        --custom_info {input.info}
         """
 
 
@@ -68,7 +88,7 @@ rule SampleCallrate98_sex:
     input:
         "results/pre_imputation_QC/Geno05.fam"
     output:
-        "results/pre_imputation_QC/Geno05_SCRSex.fam"
+        "results/pre_imputation_QC/Geno05_SCRSex.fam",
     params:
         scr1= config["CR_filters"]["sample_CR1"],
     conda: "envs/plink.yaml"
@@ -86,7 +106,7 @@ rule SampleCallrate98_sex:
 
 rule filter_sex_checked:
     input:
-        infile="results/pre_imputation_QC/Geno05_SCRSex.fam"
+        infile="results/pre_imputation_QC/Geno05_SCRSex.fam",
     output:
         problem_sex="results/pre_imputation_QC/sex_check_problem_sex.txt",
         remove_ids="results/pre_imputation_QC/sex_check_problem_ids.txt",
@@ -106,7 +126,6 @@ rule filter_sex_checked:
         --make-bed \
         --out {params.outfile}
         """
-
 
 rule get_heterozygosity:
     input:
@@ -412,10 +431,10 @@ rule run_pca_filter:
         eur_outfile="resources/eur_ids.txt",
         non_eur_outfile="resources/non_eur_ids.txt",
     params:
-        pc1_min=config["pca_filters_eur"]["pc1_min"],
-        pc1_max=config["pca_filters_eur"]["pc1_max"],
-        pc2_min=config["pca_filters_eur"]["pc2_min"],
-        pc2_max=config["pca_filters_eur"]["pc2_max"],
+        pc1_min=config["pca_ancestry_filters"]["pc1_min"],
+        pc1_max=config["pca_ancestry_filters"]["pc1_max"],
+        pc2_min=config["pca_ancestry_filters"]["pc2_min"],
+        pc2_max=config["pca_ancestry_filters"]["pc2_max"],
     conda:"envs/R.yaml"
     shell:
         """

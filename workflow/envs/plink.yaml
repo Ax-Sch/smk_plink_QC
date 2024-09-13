@@ -5,3 +5,4 @@ channels:
   - defaults
 dependencies:
   - plink
+  - python=3.11.8

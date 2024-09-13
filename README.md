@@ -1,6 +1,6 @@
 # Data Cleaning Pipeline
 
-This is a simple data cleaning pipeline built with Snakemake for the binary PLINK file set: `.bed`, `.bim`, and `.fam`. The pipeline automates the data cleaning process to ensure reproducibility. It assumes that the files are in binary PLINK format with phenotypes already added.
+This is a simple data cleaning pipeline built with Snakemake for the binary PLINK file set: `.bed`, `.bim`, and `.fam`. The pipeline automates the data cleaning process to ensure reproducibility. It assumes that the files are in binary PLINK format with phenotypes such as sex and case/control status already added.
 
 ## Table of Contents
 
@@ -44,7 +44,10 @@ input_plink: "path/to/your/input_files/files.fam"
 genome_ref:
     version: b37 or b38
 ```
-The input files for this pipeline are genotype data in .bim, .bed, and .fam formats, with sex information and case/control status already included as phenotypes.
+As mentioned earlier, the input files for this pipeline are genotype data in .bim, .bed, and .fam formats, with sex information and case/control status already included as phenotypes.
+
+As part of the pipeline, population stratification is performed using Principal Component Analysis (PCA) to filter out individuals who do not fall within the defined ranges for European ancestry. The boundaries for the first two principal components (PC1 and PC2) are specified in the configuration file under the section "pca_ancestry_filters:". These ranges can be adjusted as necessary to meet the requirements of specific analyses.
+
 
 2. Run the Pipeline
 
