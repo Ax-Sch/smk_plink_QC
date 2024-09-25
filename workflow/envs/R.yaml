@@ -10,3 +10,5 @@ dependencies:
   - r-plotly
   - r-readxl  
   - r-optparse
+  - r-ggplot2
+  - r-htmlwidgets

@@ -5,7 +5,7 @@ library(plotly)
 library(rmarkdown)
 
 # Get command line arguments
-args=c('pca.eigenvec', '20130606_g1k.ped', 'population_PCA.html')
+args=c('pca.eigenvec', '../../../resources/H_1000G/H_ped/20130606_g1k.ped', 'population_PCA.html')
 
 # Define input and output files
 eigenvec_file <- args[1]
@@ -57,6 +57,18 @@ PC1_2_plot <- ggplot() +
 
 ggsave(filename="PC1_2_plot.pdf", plot=PC1_2_plot, width=4, height=3.5)
 ggplotly(PC1_2_plot)
+
+ggplotly(ggplot()+
+	            geom_point(data=dataRF, aes(x=PC3,y=PC4,shape=Continental), alpha=0.5,size=3)+ 
+		               geom_point(data=dataPred, aes(x=PC3,y=PC4,color=Prediction, text=Individual.ID),shape=1, alpha=0.8,size=2 ) )
+
+ggplotly(ggplot()+
+	            geom_point(data=dataRF, aes(x=PC5,y=PC6,shape=Continental), alpha=0.5,size=3)+ 
+		               geom_point(data=dataPred, aes(x=PC5,y=PC6,color=Prediction, text=Individual.ID),shape=1, alpha=0.8,size=2 ) )
+
+ggplotly(ggplot()+
+	            geom_point(data=dataRF, aes(x=PC7,y=PC8,shape=Continental), alpha=0.5,size=3)+ 
+		               geom_point(data=dataPred, aes(x=PC7,y=PC8,color=Prediction, text=Individual.ID),shape=1, alpha=0.8,size=2 ) )
 
 # Save the results
 write_tsv(dataPred %>% select(Individual.ID, Prediction), file="populations.txt")

@@ -1,21 +1,26 @@
 configfile: "config/config.yaml"
 import os
 
+
 rule all:
     input:
-        "results/kinship/last_check_kinship_keep_fam",
-        "results/PCA/populations_PCA.html",
-        "results/PCA/populations.txt",       
-        "resources/non_eur_ids.txt",
-        "results/logs/pre_PCA.logs"
+        "results/D_Sex_check/check_sex_scatter.html",
+        "results/E_Get_heterozygosity/Het_check_Fcoeff_cases_hist.pdf",
+        "results/E_Get_heterozygosity/Het_check_Fcoeff_controls_hist.pdf",
+	"results/H_1000G_PCA/H_PCA_plots/populations_PCA.html",
+        "results/H_1000G_PCA/H_PCA_plots/populations.txt",
+        "results/H_1000G_PCA/H_PCA_filter/non_eur_ids.txt",
+        "results/I_Kinship_analysis/kinship_plot.html",
+	"results/I_Kinship_analysis/last_check_kinship_keep_fam",
 
-rule prepare_correct_x:
+
+rule A_Prepare_correct_x:
     input:
         fam= config["input_plink"],
     output:
-        mergex="results/pre_imputation_QC/prepared_xmerge.fam",
-        splitx="results/pre_imputation_QC/prepared_xsplit.fam",
-        XhetMiss="results/pre_imputation_QC/prepared_xhetMiss.fam",
+        mergex="results/A_Prepare_correct_x/Prepared_xmerge.fam",
+        splitx="results/A_Prepare_correct_x/Prepared_xsplit.fam",
+        XhetMiss="results/A_Prepare_correct_x/Prepared_xhetMiss.fam",
     params:
         plink_in=lambda wildcards, input: input["fam"][:-4],
         mergex=lambda wildcards, output: output["mergex"][:-4],
@@ -42,33 +47,13 @@ rule prepare_correct_x:
         --set-hh-missing \
         --make-bed \
         --out {params.XhetMiss}
-       """
+        """
  
-rule logs:
+rule B_Genotyping95:
     input:
-       infile="results/pre_imputation_QC/{file_name}.log",
+        fam="results/A_Prepare_correct_x/Prepared_xhetMiss.fam",
     output:
-       logs="results/logs/pre_PCA.logs",
-    params:
-       log_in=lambda wildcards, input:input.infile,
-       output_prefix=lambda wildcards, input: wildcards.file_name,
-       info="please refer to specific files for more information",
-    conda: "envs/plink.yaml"
-    shell:
-        """
-        python workflow/scripts/update_log.py \
-        --input_log_file {params.log_in} \
-        --custom_logs {output.logs} \
-        --output_file_name {params.output_prefix} \
-        --custom_info {input.info}
-        """
-
-
-rule genotyping05:
-    input:
-        fam="results/pre_imputation_QC/prepared_xhetMiss.fam",
-    output:
-        fam="results/pre_imputation_QC/Geno05.fam",
+        fam="results/B_Genotyping95/Geno95.fam",
     params:
         vcr1= config["CR_filters"]["variant_CR1"],
     conda: "envs/plink.yaml"
@@ -83,12 +68,11 @@ rule genotyping05:
         --make-bed \
         --out ${{outfile::-4}}
         """
-
-rule SampleCallrate98_sex: 
+rule C_SampleCallrate98:
     input:
-        "results/pre_imputation_QC/Geno05.fam"
+        "results/B_Genotyping95/Geno95.fam",
     output:
-        "results/pre_imputation_QC/Geno05_SCRSex.fam",
+        "results/C_SampleCallrate98/Geno05_SCR.fam"
     params:
         scr1= config["CR_filters"]["sample_CR1"],
     conda: "envs/plink.yaml"
@@ -99,53 +83,88 @@ rule SampleCallrate98_sex:
         plink \
         --bfile ${{infile::-4}} \
         --mind {params.scr1} \
-        --check-sex \
         --make-bed \
         --out ${{outfile::-4}}
         """
 
-rule filter_sex_checked:
+rule D_Sex_check:
     input:
-        infile="results/pre_imputation_QC/Geno05_SCRSex.fam",
+        fam= "results/C_SampleCallrate98/Geno05_SCR.fam",
     output:
-        problem_sex="results/pre_imputation_QC/sex_check_problem_sex.txt",
-        remove_ids="results/pre_imputation_QC/sex_check_problem_ids.txt",
-        outfile="results/pre_imputation_QC/Geno05_SCRSex_checked.fam",
+        sexcheck= "results/D_Sex_check/Geno05_SCR.sexcheck",
+    params:
+        plink_in=lambda wildcards, input: input["fam"][:-4],
+        plink_out= lambda wildcards, output: output["sexcheck"][:-9],
+        female_max_F= config["F_coefficent"]["female_max_F"],
+        male_min_F= config["F_coefficent"]["male_min_F"],
+    conda: "envs/plink.yaml"
+    shell:
+        """
+        plink \
+        --bfile {params.plink_in} \
+        --check-sex {params.female_max_F} {params.male_min_F} \
+        --allow-no-sex \
+        --out {params.plink_out}
+        """
+
+rule D_Graph_Sex_check:
+    input:
+        sexcheck= "results/D_Sex_check/Geno05_SCR.sexcheck"
+    output:
+        problem_sex="results/D_Sex_check/sex_check_problem_sex.txt",
+        remove_ids="results/D_Sex_check/sex_check_problem_ids.txt",
+        sexcheck_graph="results/D_Sex_check/check_sex_scatter.html",
+    conda: "envs/R.yaml"
+    shell:
+        """
+        cp -f workflow/scripts/check_sex_scatter.R results/D_Sex_check/check_sex_scatter.R
+        cd results/D_Sex_check/
+        Rscript -e 'library(rmarkdown); rmarkdown::render("check_sex_scatter.R","html_document")'
+#        Rscript workflow/scripts/check_sex.R \
+#        --sexcheckfile {input.sexcheck} \
+#        --problem_sex_info {output.problem_sex} \
+#        --problem_sex_ids {output.remove_ids} \
+#        --f_coeff_graph {output.sexcheck_graph}
+        """
+
+rule D_Filter_sex_checked:
+    input:
+        infile="results/C_SampleCallrate98/Geno05_SCR.fam",
+        remove_ids="results/D_Sex_check/sex_check_problem_ids.txt",
+    output:
+        outfile="results/D_Sex_check/Geno05_SCRSex_checked.fam",
     params:
         infile=lambda wildcards, input: input["infile"][:-4],
         outfile= lambda wildcards, output: output["outfile"][:-4],
     conda: "envs/plink.yaml"
     shell:
         """
-        grep -P "PROBLEM|STATUS" {params.infile}.sexcheck > {output.problem_sex}
-        tail -n +2 {output.problem_sex} | awk '{{print $1 "\t" $2}}' > {output.remove_ids}
-
         plink \
         --bfile {params.infile} \
-        --remove {output.remove_ids} \
+        --remove {input.remove_ids} \
         --make-bed \
         --out {params.outfile}
         """
 
-rule get_heterozygosity:
+rule E_Get_heterozygosity:
     input:
-        "results/pre_imputation_QC/Geno05_SCRSex_checked.fam"
+        "results/D_Sex_check/Geno05_SCRSex_checked.fam"
     output:
-        cases="results/pre_imputation_QC/Geno05_SCRSex_checked_cases.het",
-        conts="results/pre_imputation_QC/Geno05_SCRSex_checked_controls.het",
+        cases="results/E_Get_heterozygosity/Geno05_SCRSex_checked_cases.het",
+        conts="results/E_Get_heterozygosity/Geno05_SCRSex_checked_controls.het",
     params:
+        conts=lambda wildcards, output: output["conts"][:-4],
         infile=lambda wildcards, input: input[0][:-4],
         cases=lambda wildcards, output: output["cases"][:-4],
-        conts=lambda wildcards, output: output["conts"][:-4],
     conda: "envs/plink.yaml"
-    shell:    
+    shell:
         """
         plink \
         --bfile {params.infile} \
         --het \
         --filter-cases \
         --out {params.cases}
-
+        
         plink \
         --bfile {params.infile} \
         --het \
@@ -153,12 +172,14 @@ rule get_heterozygosity:
         --out {params.conts}
         """
 
-rule check_heterozygosity:
+rule E_Check_heterozygosity:
     input:
-        cases="results/pre_imputation_QC/Geno05_SCRSex_checked_cases.het",
-        conts="results/pre_imputation_QC/Geno05_SCRSex_checked_controls.het",
+        cases="results/E_Get_heterozygosity/Geno05_SCRSex_checked_cases.het",
+        conts="results/E_Get_heterozygosity/Geno05_SCRSex_checked_controls.het",
     output:
-        exclude_list="results/pre_imputation_QC/Geno05_CRSex_checked_het_exclude.txt",
+        exclude_list="results/E_Get_heterozygosity/Geno05_SCRSex_checked_het_exclude.txt",
+        graph_cases="results/E_Get_heterozygosity/Het_check_Fcoeff_cases_hist.pdf",
+        graph_controls="results/E_Get_heterozygosity/Het_check_Fcoeff_controls_hist.pdf",
     params:
         lower_cutoff= config["F_coefficent"]["lower_cutoff"],
         upper_cutoff= config["F_coefficent"]["upper_cutoff"],
@@ -170,16 +191,18 @@ rule check_heterozygosity:
         --conts {input.conts} \
         --lower_cutoff {params.lower_cutoff} \
         --upper_cutoff {params.upper_cutoff} \
-        --outfile {output} 
+        --outfile {output.exclude_list} \
+        --outgraph_cases {output.graph_cases} \
+        --outgraph_controls {output.graph_controls} 
         """
 
-rule filter_het_samples:
+rule E_Filter_het_samples:
     input:
-        exclude_list="results/pre_imputation_QC/Geno05_CRSex_checked_het_exclude.txt",
-        infile= "results/pre_imputation_QC/Geno05_SCRSex_checked.fam",
+        exclude_list="results/E_Get_heterozygosity/Geno05_SCRSex_checked_het_exclude.txt",
+        infile= "results/D_Sex_check/Geno05_SCRSex_checked.fam",
     output:
-        remove_ids="results/pre_imputation_QC/het_exclude_ids.txt",
-        outfile="results/pre_imputation_QC/Geno05_SCRSex_checked_het.fam",
+        remove_ids="results/E_Get_heterozygosity/het_exclude_ids.txt",
+        outfile="results/E_Get_heterozygosity/Geno05_SCRSex_checked_het.fam",
     params:
         infile=lambda wildcards, input: input["infile"][:-4],
         outfile= lambda wildcards, output: output["outfile"][:-4],
@@ -196,11 +219,11 @@ rule filter_het_samples:
         """
 
 
-rule VariantCallrate98:
+rule F_VariantCallrate98:
     input:
-        "results/pre_imputation_QC/Geno05_SCRSex_checked_het.fam",
+        "results/E_Get_heterozygosity/Geno05_SCRSex_checked_het.fam",
     output:
-        "results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR.fam",
+        "results/F_VariantCallrate98/Geno05_SCRSex_checked_het_VCR.fam",
     params:
         infile=lambda wildcards, input: input[0][:-4],
         outfile=lambda wildcards, output: output[0][:-4],
@@ -216,54 +239,55 @@ rule VariantCallrate98:
         --out {params.outfile}
         """
 
-rule get_MissDiff_HWE:
+rule G_Get_MissDiff_HWE:
     input:
-        "results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR.fam",
+        fam="results/F_VariantCallrate98/Geno05_SCRSex_checked_het_VCR.fam",
     output:
-        "results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_case.lmiss",
-        "results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_con.lmiss",
-        "results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_all.hwe",
-        "results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_female.hwe",
-        
+        case= "results/G_MissDiff_HWE/Geno05_SCRSex_checked_het_VCR_case.lmiss",
+        con= "results/G_MissDiff_HWE/Geno05_SCRSex_checked_het_VCR_con.lmiss",
+        all= "results/G_MissDiff_HWE/Geno05_SCRSex_checked_het_VCR_all.hwe",
+        female= "results/G_MissDiff_HWE/Geno05_SCRSex_checked_het_VCR_female.hwe",
     params:
-        infile=lambda wildcards, input: input[0][:-4],
+        infile=lambda wildcards, input: input["fam"][:-4],
+        outfile_prefix="results/G_MissDiff_HWE/Geno05_SCRSex_checked_het_VCR" ,
     conda: "envs/plink.yaml"
     shell:
         """
+
         plink \
         --bfile {params.infile} \
         --filter-cases \
         --missing \
-        --out {params.infile}_case
+        --out {params.outfile_prefix}_case
 
         plink \
         --bfile {params.infile} \
         --filter-controls \
         --missing \
-        --out {params.infile}_con
+        --out {params.outfile_prefix}_con
 
         plink \
         --bfile {params.infile} \
         --hardy \
-        --out {params.infile}_all
+        --out {params.outfile_prefix}_all
 
         plink \
         --bfile {params.infile} \
         --hardy \
         --chr 23 \
         --filter-females \
-        --out {params.infile}_female
+        --out {params.outfile_prefix}_female
         """    
         
 
-rule check_MissDiff_HWE:
+rule G_Check_MissDiff_HWE:
     input:    
-        miss_case="results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_case.lmiss",
-        miss_cont="results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_con.lmiss",
-        hwe_all="results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_all.hwe",
-        hwe_female="results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_female.hwe",
+        miss_case="results/G_MissDiff_HWE/Geno05_SCRSex_checked_het_VCR_case.lmiss",
+        miss_cont="results/G_MissDiff_HWE/Geno05_SCRSex_checked_het_VCR_con.lmiss",
+        hwe_all="results/G_MissDiff_HWE/Geno05_SCRSex_checked_het_VCR_all.hwe",
+        hwe_female="results/G_MissDiff_HWE/Geno05_SCRSex_checked_het_VCR_female.hwe",
     output:
-        "results/pre_imputation_QC/remove_missingness_hwe.txt",
+        "results/G_MissDiff_HWE/remove_missingness_hwe.txt",
     params:
         miss_diff=config["HWE"]["miss_diff"],
         p1=config["HWE"]["non_x_up"],
@@ -284,12 +308,12 @@ rule check_MissDiff_HWE:
          --outfile {output} 
          """
         
-rule filter_MissDiff_HWE:    
+rule G_Filter_MissDiff_HWE:
     input:
-        fam="results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR.fam",
-        miss_list="results/pre_imputation_QC/remove_missingness_hwe.txt",
+        fam="results/F_VariantCallrate98/Geno05_SCRSex_checked_het_VCR.fam",
+        miss_list="results/G_MissDiff_HWE/remove_missingness_hwe.txt",
     output:
-        "results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam",
+        "results/G_MissDiff_HWE/Geno05_SCRSex_checked_het_VCR_MiHwe.fam",
     params:
         infile=lambda wildcards, input: input[0][:-4],
         outfile=lambda wildcards, output: output[0][:-4],
@@ -299,46 +323,62 @@ rule filter_MissDiff_HWE:
         plink2 \
         --bfile {params.infile} \
         --exclude {input.miss_list} \
-        --set-all-var-ids @:#:\$r:\$a \
         --make-bed \
         --out {params.outfile}
         """
 
+rule H_Change_ID_for_1000G_PCA:
+    input:
+        fam="results/G_MissDiff_HWE/Geno05_SCRSex_checked_het_VCR_MiHwe.fam"
+    output:
+        "results/H_1000G_PCA/Geno05_SCRSex_checked_het_VCR_MiHwe_new_IDs.fam"
+    params:
+        infile=lambda wildcards, input: input[0][:-4],
+        outfile=lambda wildcards, output: output[0][:-4],
+    conda: "envs/plink2.yaml"
+    shell:
+        """
+        plink2 \
+        --bfile {params.infile} \
+        --set-all-var-ids @:#:\$r:\$a \
+        --make-bed \
+        --out {params.outfile}
+        """
 #################PCA_for_ancestry####################
 
-rule download_1000G_sample_info:
+rule H_Download_1000G_sample_info:
     output:
-        ped_file_1000G="results/PCA/20130606_g1k.ped" # contig = chr1, ...
+        ped_file_1000G="resources/H_1000G/H_ped/20130606_g1k.ped"
     resources: cpus=1, mem_mb=3000, time_job=720
     params:
         partition='batch'
     shell:
         """
-        cd results/PCA/
+        cd resources/H_1000G/H_ped/
         wget -nc ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/working/20130606_sample_info/20130606_g1k.ped #downloading data from a specific url(no clobber)
 
         """
 
-if config["genome_ref"]["version"] == "b37":
-    include: "rules/version37_pca.smk"
-elif config["genome_ref"]["version"] == "b38":
-    include: "rules/version38_pca.smk"
+if config["genome_ref"]["version"]=="b37":
+    include:"rules/version37_pca.smk"
+elif config["genome_ref"]["version"]=="b38":
+    include:"rules/version38_pca.smk"
 
 
-rule prepare_1000G_for_ancestry_PCA_step2:
+rule H_Prepare_1000G_for_ancestry_PCA_step2:
     input:
-        fam="results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam",
-        vcf="results/1000G/1000G_chr{contig}.bcf",
+        fam="results/H_1000G_PCA/Geno05_SCRSex_checked_het_VCR_MiHwe_new_IDs.fam",
+        vcf="results/H_1000G_PCA/H_step1/1000G_chr{contig}.bcf",
     output:
-        variant_list="results/1000G/1000G_chr{contig}.vars",
-        bed2="results/1000G/1000G_chr{contig}_pruned.bed"
+        variant_list="results/H_1000G_PCA/H_step2/1000G_chr{contig}.vars",
+        bed2="results/H_1000G_PCA/H_step2/1000G_chr{contig}_pruned.bed"
     resources: cpus=1, mem_mb=18000, time_job=720
     conda: "envs/plink.yaml"
     params:
         plink_in=lambda wildcards, input: input["fam"][:-4],
         partition='batch',
-        bed1="results/1000G/1000G_chr{contig}",
-        bed2="results/1000G/1000G_chr{contig}_pruned",
+        bed1="results/H_1000G_PCA/H_step2/1000G_chr{contig}",
+        bed2="results/H_1000G_PCA/H_step2/1000G_chr{contig}_pruned",
         hg_reference= config["genome_ref"]["version"],
         maf2= config["pca_1000G"]["pca_maf"],
         win_size= config["pca_1000G"]["window_size"],
@@ -366,15 +406,15 @@ rule prepare_1000G_for_ancestry_PCA_step2:
         """
         
         
-rule merge_data_w_1000G_run_PCA:
+rule H_Merge_data_w_1000G_run_PCA_step3:
     input:
-        _1000G_data=expand("results/1000G/1000G_chr{contig}_pruned.bed", contig=config["contigs_wo_X"]), 
-        fam="results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam",
-        ped_file_1000G="results/PCA/20130606_g1k.ped"
+        _1000G_data=expand("results/H_1000G_PCA/H_step2/1000G_chr{contig}_pruned.bed", contig=config["contigs_wo_X"]), 
+        fam="results/H_1000G_PCA/Geno05_SCRSex_checked_het_VCR_MiHwe_new_IDs.fam",
+        ped_file_1000G="resources/H_1000G/H_ped/20130606_g1k.ped"
     output:
-        merge_list="results/1000G/merge_list.txt",
-        bim_pca="results/PCA/MergeFullForPCA.bim",
-        out_pca="results/PCA/pca.eigenvec",
+        merge_list="results/H_1000G_PCA/H_step3/merge_list.txt",
+        bim_pca="results/H_1000G_PCA/H_step3/MergeFullForPCA.bim",
+        out_pca="results/H_1000G_PCA/H_PCA_plots/pca.eigenvec",
     resources: cpus=1, mem_mb=18000, time_job=720
     params:
         partition='batch',
@@ -384,52 +424,51 @@ rule merge_data_w_1000G_run_PCA:
     shell:
         """
         echo {input._1000G_data} | tr " " "\\n" | sed 's/.bed//g' > {output.merge_list}
-        plink --merge-list {output.merge_list} --out results/1000G/Merged
-        awk '{{ print $2 }}' results/1000G/Merged.bim > results/1000G/MergeVariants.txt
+        plink --merge-list {output.merge_list} --out results/H_1000G_PCA/H_step3/Merged
+        awk '{{ print $2 }}' results/H_1000G_PCA/H_step3/Merged.bim > results/H_1000G_PCA/H_step3/MergeVariants.txt
 
         plink --bfile {params.plink_in} \
-        --extract results/1000G/MergeVariants.txt \
+        --extract results/H_1000G_PCA/H_step3/MergeVariants.txt \
         --make-bed \
-        --out results/1000G/cohort
+        --out results/H_1000G_PCA/H_step3/cohort
 
-        printf "results/1000G/Merged\\nresults/1000G/cohort" > results/1000G/ForMergeFull.list
+        printf "results/H_1000G_PCA/H_step3/Merged\\nresults/H_1000G_PCA/H_step3/cohort" > results/H_1000G_PCA/H_step3/ForMergeFull.list
 
-        plink --merge-list results/1000G/ForMergeFull.list --out results/PCA/MergeFullForPCA
+        plink --merge-list results/H_1000G_PCA/H_step3/ForMergeFull.list --out results/H_1000G_PCA/H_step3/MergeFullForPCA
 
-        awk '{{ print $1,$2 }}' results/1000G/Merged.fam | awk '$(NF+1) = "1000G"' > results/PCA/clusters.txt
-        awk '{{ print $1,$2 }}' results/1000G/cohort.fam | awk '$(NF+1) = "Cohort"' >> results/PCA/clusters.txt
+        awk '{{ print $1,$2 }}' results/H_1000G_PCA/H_step3/Merged.fam | awk '$(NF+1) = "1000G"' > results/H_1000G_PCA/H_step3/clusters.txt
+        awk '{{ print $1,$2 }}' results/H_1000G_PCA/H_step3/cohort.fam | awk '$(NF+1) = "Cohort"' >> results/H_1000G_PCA/H_step3/clusters.txt
 
         plink \
-        --bfile results/PCA/MergeFullForPCA \
+        --bfile results/H_1000G_PCA/H_step3/MergeFullForPCA \
         --pca-cluster-names 1000G \
         --pca \
-        --within results/PCA/clusters.txt \
+        --within results/H_1000G_PCA/H_step3/clusters.txt \
         --out {params.plink_out}
 
         """
 
-rule make_pca_plots:
+rule H_Make_PCA_plots:
     input:
-        eigenvec="results/PCA/pca.eigenvec",
-        ped="results/PCA/20130606_g1k.ped",
+        eigenvec="results/H_1000G_PCA/H_PCA_plots/pca.eigenvec",
+        #ped="resourses/H_1000G/H_ped/20130606_g1k.ped",
     output:
-        html="results/PCA/populations_PCA.html",
-        populations="results/PCA/populations.txt",
+        html="results/H_1000G_PCA/H_PCA_plots/populations_PCA.html",
+        populations="results/H_1000G_PCA/H_PCA_plots/populations.txt",
     conda: "envs/R.yaml"
     shell:
         """
-        cp -f workflow/scripts/populations_PCA.R results/PCA/populations_PCA.R
-        cd results/PCA/
+        cp -f workflow/scripts/populations_PCA.R results/H_1000G_PCA/H_PCA_plots/populations_PCA.R
+        cd results/H_1000G_PCA/H_PCA_plots
         Rscript -e 'library(rmarkdown); rmarkdown::render("populations_PCA.R","html_document")'
-        #Rscript populations_PCA.R {input.eigenvec} {input.ped} {output.html}
         """
 
-rule run_pca_filter:
+rule H_Run_pca_filter:
     input:
-        eigenvec_file="results/PCA/pca.eigenvec",
+        eigenvec_file="results/H_1000G_PCA/H_PCA_plots/pca.eigenvec",
     output:
-        eur_outfile="resources/eur_ids.txt",
-        non_eur_outfile="resources/non_eur_ids.txt",
+        eur_outfile="results/H_1000G_PCA/H_PCA_filter/eur_ids.txt",
+        non_eur_outfile="results/H_1000G_PCA/H_PCA_filter/non_eur_ids.txt",
     params:
         pc1_min=config["pca_ancestry_filters"]["pc1_min"],
         pc1_max=config["pca_ancestry_filters"]["pc1_max"],
@@ -448,13 +487,13 @@ rule run_pca_filter:
         --non_eur_outfile {output.non_eur_outfile}
         """
 
-rule filter_plink_for_ancestry:
+rule H_Filter_plink_for_ancestry:
     input:
-        fam="results/pre_imputation_QC/Geno05_SCRSex_checked_het_VCR_MiHwe.fam",
-        europ_include="resources/eur_ids.txt",
+        fam="results/G_MissDiff_HWE/Geno05_SCRSex_checked_het_VCR_MiHwe.fam",
+        europ_include="results/H_1000G_PCA/H_PCA_filter/eur_ids.txt",
     output:
-        keep_fam="results/PCA/non_europ_excluded.fam",
-        fam="results/PCA/cohort_eur.fam",
+        keep_fam="results/H_1000G_PCA/H_PCA_filter/non_europ_excluded.fam",
+        fam="results/H_1000G_PCA/H_PCA_filter/cohort_eur.fam",
     params:
         plink_in=lambda wildcards, input: input["fam"][:-4],
         plink_out=lambda wildcards, output: output["fam"][:-4],
@@ -472,15 +511,15 @@ rule filter_plink_for_ancestry:
 
         """
 
-rule kinship_analysis:
+rule I_Kinship_analysis:
     input:
-        fam="results/PCA/cohort_eur.fam",
-    output:#primary/secondary kinship coefficients
-        kinship_file1="results/kinship/Geno05_CR_sex_snp_qc_snpqc2_EUR.kin",
-        kinship_file2="results/kinship/Geno05_CR_sex_snp_qc_snpqc2_EUR.kin0",
+        fam="results/H_1000G_PCA/H_PCA_filter/cohort_eur.fam",
+    output:
+        kinship_file1="results/I_Kinship_analysis/Geno05_CR_sex_snp_qc_snpqc2_EUR.kin",
+        kinship_file2="results/I_Kinship_analysis/Geno05_CR_sex_snp_qc_snpqc2_EUR.kin0",
     params:
         plink_in=lambda wildcards, input: input["fam"][:-4],
-        out_folder="results/kinship",
+        out_folder="results/I_Kinship_analysis",
         prefix=lambda wildcards, output: output["kinship_file1"][:-4],
     conda: "envs/king.yaml"
     shell:
@@ -490,15 +529,16 @@ rule kinship_analysis:
         -b {params.plink_in}.bed \
         --kinship \
         --prefix {params.prefix}
-        """
+        """       
 
-rule kinship_analysis_R:
+
+rule I_kinship_analysis_R:
     input:
-        fam="results/PCA/cohort_eur.fam",
-        kinship_file1="results/kinship/Geno05_CR_sex_snp_qc_snpqc2_EUR.kin",
-        kinship_file2="results/kinship/Geno05_CR_sex_snp_qc_snpqc2_EUR.kin0",
+        fam="results/H_1000G_PCA/H_PCA_filter/cohort_eur.fam",
+        kinship_file1="results/I_Kinship_analysis/Geno05_CR_sex_snp_qc_snpqc2_EUR.kin",
+        kinship_file2="results/I_Kinship_analysis/Geno05_CR_sex_snp_qc_snpqc2_EUR.kin0",
     output:
-        kinship_keep="results/kinship/keep_ids.fam",
+        kinship_keep="results/I_Kinship_analysis/keep_ids.fam",
     params:
         kinship=config["Kinship"]["cutoff1"]
     conda: "envs/R.yaml"
@@ -512,12 +552,12 @@ rule kinship_analysis_R:
         --outfile {output.kinship_keep} 
         """
 
-rule remove_relateds:
+rule I_remove_relateds:
     input:
-        fam="results/PCA/cohort_eur.fam",
-        kinship_keep="results/kinship/keep_ids.fam",
+        fam="results/H_1000G_PCA/H_PCA_filter/cohort_eur.fam",
+        kinship_keep="results/I_Kinship_analysis/keep_ids.fam",
     output:
-        fam="results/kinship/cohort_eur_unrelated.fam",
+        fam="results/I_Kinship_analysis/cohort_eur_unrelated.fam",
     params:
         plink_in=lambda wildcards, input: input["fam"][:-4],
         plink_out=lambda wildcards, output: output["fam"][:-4],
@@ -533,16 +573,16 @@ rule remove_relateds:
 
         """
 
-rule kinship_check2:
+rule I_Kinship_check2:
     input:
-        fam="results/kinship/cohort_eur_unrelated.fam",
+        fam="results/I_Kinship_analysis/cohort_eur_unrelated.fam",
     output:
-        kinship_file1="results/kinship/last_check_kinship.kin",
-        kinship_file2="results/kinship/last_check_kinship.kin0",
+        kinship_file1="results/I_Kinship_analysis/last_check_kinship.kin",
+        kinship_file2="results/I_Kinship_analysis/last_check_kinship.kin0",
 
     params:
         plink_in=lambda wildcards, input: input["fam"][:-4],
-        out_folder="results/kinship",
+        out_folder="results/I_Kinship_analysis",
         prefix=lambda wildcards, output: output["kinship_file1"][:-4],
     conda: "envs/king.yaml"
     shell:
@@ -553,13 +593,13 @@ rule kinship_check2:
         --prefix {params.prefix}
         """
         
-rule kinship_check2_R:
+rule I_Kinship_check2_R:
     input:
-        fam="results/kinship/cohort_eur_unrelated.fam",
-        kinship_file1="results/kinship/last_check_kinship.kin",
-        kinship_file2="results/kinship/last_check_kinship.kin0",
+        fam="results/I_Kinship_analysis/cohort_eur_unrelated.fam",
+        kinship_file1="results/I_Kinship_analysis/last_check_kinship.kin",
+        kinship_file2="results/I_Kinship_analysis/last_check_kinship.kin0",
     output:
-        kinship_keep="results/kinship/last_check_kinship_keep_fam",
+        kinship_keep="results/I_Kinship_analysis/last_check_kinship_keep_fam",
     params:
         kinship=config["Kinship"]["cutoff2"]
     conda: "envs/R.yaml"
@@ -580,6 +620,19 @@ rule kinship_check2_R:
 
         """
 
+rule I_kinship_scatter_plot:
+    input:
+        kinship1="results/I_Kinship_analysis/Geno05_CR_sex_snp_qc_snpqc2_EUR.kin0",
+        kinship2="results/I_Kinship_analysis/last_check_kinship.kin0"
+    output:
+        html= "results/I_Kinship_analysis/kinship_plot.html"
+    conda: "envs/R.yaml"
 
+    shell:
+        """
+        cp -f workflow/scripts/kinship_plot.R results/I_Kinship_analysis/kinship_plot.R
+        cd results/I_Kinship_analysis/
+        Rscript -e 'library(rmarkdown); rmarkdown::render("kinship_plot.R","html_document")'
+        """
 ################################################
 ################################################

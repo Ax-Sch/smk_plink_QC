@@ -3,12 +3,7 @@ results/
 .conda/
 .cache/
 .idea/
-input_files/
+input_files/*
 dockerfile
-resources/1000G/*
-resources/fasta/*
-!resources/1000G/.gitkeep
-!resources/fasta/.gitkeep
+resources/*
 mods/
-resources/eur_ids.txt
-resources/non_eur_ids.txt

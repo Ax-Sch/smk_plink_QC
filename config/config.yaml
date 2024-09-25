@@ -1,6 +1,6 @@
 ---
-input_plink: "input_files/prepared_final_38.fam"
-location_1000G: "resources/1000G/"
+input_plink: "input_files/lc_b37_input/2_sex_updated.fam" #path to input files with either one of the extensions: .bed, .bim or .fam
+location_1000G: "resources/H_1000G/H_Genotypes/" #no need to change anything here
 contigs_wo_X:
  - 1
  - 2
@@ -24,36 +24,38 @@ contigs_wo_X:
  - 20
  - 21
  - 22
-genome_ref:
-    version: b38
-CR_filters:
-    variant_CR1: 0.05
+genome_ref: #this is the reference genome of your input files as well as for downloading the corresponding data from 1000Genomes project
+    version: b37
+CR_filters: #Call rate filters used in different rules, can be changed according to requirements
+    variant_CR1: 0.05 
     sample_CR1: 0.02
     variant_CR2: 0.02
 
-F_coefficent:
+F_coefficent: #Inbreeding coefficent/ F-coefficient values for filtering out samples that do not fall in the range.
+    female_max_F: 0.2
+    male_min_F: 0.8
     lower_cutoff: -0.2
     upper_cutoff: 0.2
 
-HWE:
+HWE: #Cut-off for testing and filtering out variants based on Hardy-Weinberg Equilibrium
     miss_diff: 0.02
     non_x_up: 1e-06
     non_x_ap: 1e-10
     x_ap: 1e-06
 
-pca_1000G:
+pca_1000G: #QC for 1000Genomes data used for population stratification
     bcf_maf: 0.05
     pca_maf: 0.10
     window_size: 50
     window_shift: 5
     r2: 1.5
 
-pca_ancestry_filters:
+pca_ancestry_filters: #values set for filtering out samples that do not fall in this range. These are set for European ancestry individuals. Can be altered after the PCA plot is generated in the folder results/PCA/population_PCA.html
   pc1_min: -0.01
   pc1_max: -0.005
   pc2_min: -0.017
   pc2_max: -0.0128
 
-Kinship:
+Kinship: #kinship coefficient cutoffs for filtering out related individuals. More information about cutoffs can be found on KINGrelatedness software website/documentation.
   cutoff1: 0.04
   cutoff2: 0.04
