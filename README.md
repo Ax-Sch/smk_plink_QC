@@ -1,3 +1,8 @@
+# THIS IS CURRENTLY UNDER ACTIVE DEVELOPMENT
+
+
+
+
 # Data Cleaning Pipeline
 
 This is a simple data cleaning pipeline built with Snakemake for the binary PLINK file set: `.bed`, `.bim`, and `.fam`. The pipeline automates the data cleaning process to ensure reproducibility. It assumes that the files are in binary PLINK format with phenotypes such as sex and case/control status already added.
@@ -7,7 +12,7 @@ This is a simple data cleaning pipeline built with Snakemake for the binary PLIN
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Configuration](#configuration)
+- [Output](#output)
 - [Acknowledgements](#acknowledgements)
 
 ## Requirements
@@ -38,7 +43,7 @@ conda activate snakemake8
 ### 3. Usage
 1. Configure Input Files and Parameters
 
-Navigate to the config.yaml file in the config directory. Here, you can adjust parameters according to your requirements. For example, you can set the path to your input files, and Human genome reference version:
+All configuration options can be found in the config.yaml file within the directory config. This file allows you to customize paths, parameters, and settings to fit your specific needs. For example, you can set the path to your input files, and Human genome reference version:
 ```sh
 input_plink: "path/to/your/input_files/files.fam"
 genome_ref:
@@ -48,7 +53,7 @@ An example data set can be found here: https://uni-bonn.sciebo.de/s/4jdQGESb92jC
 
 As mentioned earlier, the input files for this pipeline are genotype data in .bim, .bed, and .fam formats, with sex information and case/control status already included as phenotypes.
 
-As part of the pipeline, population stratification is performed using Principal Component Analysis (PCA) to filter out individuals who do not fall within the defined ranges for European ancestry. The boundaries for the first two principal components (PC1 and PC2) are specified in the configuration file under the section "pca_ancestry_filters:". These ranges can be adjusted as necessary to meet the requirements of specific analyses.
+As part of the pipeline, Principal Component Analysis (PCA) is performed to filter out individuals who do not fall within the defined ranges for the ancestry you are interested in. The boundaries for the first two principal components (PC1 and PC2) are specified in the configuration file under the section "pca_ancestry_filters:". These ranges can be adjusted as necessary to meet the requirements of specific analyses.
 
 
 2. Run the Pipeline
@@ -62,8 +67,38 @@ If the dry run is successful, run the pipeline using the following command (repl
 snakemake --cores 1 --use-conda --conda-frontend conda
 ```
 
-### 4. Configuration
-All configuration options can be found in the config.yaml file. This file allows you to customize paths, parameters, and settings to fit your specific needs.
+### 4. Output
+All output directories and their corresponding snakemake rules have a capital letter as prefix (A-Z). The following steps are conducted:
+A_Prepare_correct_x
+B_Genotyping95    
+C_SampleCallrate98                            1
+D_Filter_sex_checked                          1
+D_Graph_Sex_check                             1
+D_Sex_check                                   1
+E_Check_heterozygosity                        1
+E_Filter_het_samples                          1
+E_Get_heterozygosity                          1
+F_VariantCallrate98                           1
+G_Check_MissDiff_HWE                          1
+G_Filter_MissDiff_HWE                         1
+G_Get_MissDiff_HWE                            1
+H_Change_ID_for_1000G_PCA                     1
+H_Download_1000G_chromosomes                 22
+H_Download_1000G_sample_info                  1
+H_Download_fasta_files                        1
+H_Filter_plink_for_ancestry                   1
+H_Make_PCA_plots                              1
+H_Merge_data_w_1000G_run_PCA_step3            1
+H_Prepare_1000G_for_ancestry_PCA_step1       22
+H_Prepare_1000G_for_ancestry_PCA_step2       22
+H_Run_pca_filter                              1
+H_Unzip_fasta                                 1
+I_Kinship_analysis                            1
+I_Kinship_check2                              1
+I_Kinship_check2_R                            1
+I_kinship_analysis_R                          1
+I_kinship_scatter_plot                        1
+I_remove_relateds                             1 
 
 ### 5. Acknowledgements
 I would like to thank my supervisors, Dr. Axel Schmidt ([@Ax-Sch](https://github.com/Ax-Sch)) and Dr. Kerstin Ludwig, for their guidance and support. Additionally, I would like to thank the developers of the software used within this repository.
