@@ -7,11 +7,11 @@ rule all:
         "results/D_Sex_check/check_sex_scatter.html",
         "results/E_Get_heterozygosity/Het_check_Fcoeff_cases_hist.pdf",
         "results/E_Get_heterozygosity/Het_check_Fcoeff_controls_hist.pdf",
-	"results/H_1000G_PCA/H_PCA_plots/populations_PCA.html",
+        "results/H_1000G_PCA/H_PCA_plots/populations_PCA.html",
         "results/H_1000G_PCA/H_PCA_plots/populations.txt",
         "results/H_1000G_PCA/H_PCA_filter/non_eur_ids.txt",
         "results/I_Kinship_analysis/kinship_plot.html",
-	"results/I_Kinship_analysis/last_check_kinship_keep_fam",
+        "results/I_Kinship_analysis/last_check_kinship_keep_fam",
 
 
 rule A_Prepare_correct_x:
