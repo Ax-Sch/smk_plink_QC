@@ -68,36 +68,38 @@ snakemake --cores 1 --use-conda --conda-frontend conda
 ```
 
 ### 4. Output
-All output directories and their corresponding snakemake rules have a capital letter as prefix (A-Z). The following steps are conducted:-A_Prepare_correct_x
--B_Genotyping 
--C_SampleCallrate 
--D_Filter_sex_checked 
--D_Graph_Sex_check
--D_Sex_check
--E_Check_heterozygosity 
--E_Filter_het_samples 
--E_Get_heterozygosity 
--F_VariantCallrate
--G_Check_MissDiff_HWE 
--G_Filter_MissDiff_HWE
--G_Get_MissDiff_HWE 
--H_Change_ID_for_1000G_PCA
--H_Download_1000G_chromosomes
--H_Download_1000G_sample_info 
--H_Download_fasta_files 
--H_Filter_plink_for_ancestry
--H_Make_PCA_plots 
--H_Merge_data_w_1000G_run_PCA_step3 
--H_Prepare_1000G_for_ancestry_PCA_step1
--H_Prepare_1000G_for_ancestry_PCA_step2
--H_Run_pca_filter 
--H_Unzip_fasta
--I_Kinship_analysis 
--I_Kinship_check2 
--I_Kinship_check2_R 
--I_kinship_analysis_R 
--I_kinship_scatter_plot 
--I_remove_relateds
+All output directories and their corresponding snakemake rules have a capital letter as prefix (A-Z). The following steps are conducted:
+- A_Prepare_correct_x
+- B_Genotyping 
+- C_SampleCallrate 
+- D_Filter_sex_checked 
+- D_Graph_Sex_check
+- D_Sex_check
+- E_Check_heterozygosity 
+- E_Filter_het_samples 
+- E_Get_heterozygosity 
+- F_VariantCallrate
+- G_Check_MissDiff_HWE 
+- G_Filter_MissDiff_HWE
+- G_Get_MissDiff_HWE 
+- H_Change_ID_for_1000G_PCA
+- H_Download_1000G_chromosomes
+- H_Download_1000G_sample_info 
+- H_Download_fasta_files 
+- H_Filter_plink_for_ancestry
+- H_Make_PCA_plots 
+- H_Merge_data_w_1000G_run_PCA_step3 
+- H_Prepare_1000G_for_ancestry_PCA_step1
+- H_Prepare_1000G_for_ancestry_PCA_step2
+- H_Run_pca_filter 
+- H_Unzip_fasta
+- I_Kinship_analysis 
+- I_Kinship_check2 
+- I_Kinship_check2_R 
+- I_kinship_analysis_R 
+- I_kinship_scatter_plot 
+- I_remove_relateds
+
 
 ### 5. Acknowledgements
 I would like to thank my supervisors, Dr. Axel Schmidt ([@Ax-Sch](https://github.com/Ax-Sch)) and Dr. Kerstin Ludwig, for their guidance and support. Additionally, I would like to thank the developers of the software used within this repository.
