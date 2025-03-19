@@ -7,3 +7,4 @@ input_files/*
 dockerfile
 resources/*
 mods/
+.DS_Store

@@ -1,5 +1,5 @@
 ---
-input_plink: "input_files/lc_b37_input/2_sex_updated.fam" #path to input files with either one of the extensions: .bed, .bim or .fam
+input_plink: "../example_genotype/test.fam" #path to input files with either one of the extensions: .bed, .bim or .fam
 location_1000G: "resources/H_1000G/H_Genotypes/" #no need to change anything here
 contigs_wo_X:
  - 1
