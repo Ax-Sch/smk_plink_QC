@@ -1,0 +1,26 @@
+PLINK v1.9.0-b.8 64-bit (22 Oct 2024)
+Options in effect:
+  --bfile test
+  --extract small_test.bim
+  --make-bed
+  --out trash_test
+
+Hostname: ubuntu
+Working directory: /Users/aschmidt/Downloads/example_genotype
+Start time: Wed Mar 19 20:39:26 2025
+
+Random number seed: 1742413166
+16032 MB RAM detected; reserving 8016 MB for main workspace.
+500313 variants loaded from .bim file.
+480 people (227 males, 253 females) loaded from .fam.
+480 phenotype values loaded from .fam.
+--extract: 3000 variants remaining.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 480 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Total genotyping rate is exactly 1.
+3000 variants and 480 people pass filters and QC.
+Among remaining phenotypes, 150 are cases and 330 are controls.
+--make-bed to trash_test.bed + trash_test.bim + trash_test.fam ... done.
+
+End time: Wed Mar 19 20:39:26 2025

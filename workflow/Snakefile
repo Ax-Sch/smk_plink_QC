@@ -48,12 +48,12 @@ rule A_Prepare_correct_x:
         --make-bed \
         --out {params.XhetMiss}
         """
- 
-rule B_Genotyping95:
+
+rule B_VariantCallrate1:
     input:
         fam="results/A_Prepare_correct_x/Prepared_xhetMiss.fam",
     output:
-        fam="results/B_Genotyping95/Geno95.fam",
+        fam="results/B_VariantCallrate1/VCR.fam",
     params:
         vcr1= config["CR_filters"]["variant_CR1"],
     conda: "envs/plink.yaml"
@@ -68,11 +68,12 @@ rule B_Genotyping95:
         --make-bed \
         --out ${{outfile::-4}}
         """
-rule C_SampleCallrate98:
+
+rule C_SampleCallrate:
     input:
-        "results/B_Genotyping95/Geno95.fam",
+        "results/B_VariantCallrate1/VCR.fam",
     output:
-        "results/C_SampleCallrate98/Geno05_SCR.fam"
+        "results/C_SampleCallrate/VCR_SCR.fam"
     params:
         scr1= config["CR_filters"]["sample_CR1"],
     conda: "envs/plink.yaml"
@@ -89,9 +90,9 @@ rule C_SampleCallrate98:
 
 rule D_Sex_check:
     input:
-        fam= "results/C_SampleCallrate98/Geno05_SCR.fam",
+        fam= "results/C_SampleCallrate/VCR_SCR.fam",
     output:
-        sexcheck= "results/D_Sex_check/Geno05_SCR.sexcheck",
+        sexcheck= "results/D_Sex_check/VCR_SCR.sexcheck",
     params:
         plink_in=lambda wildcards, input: input["fam"][:-4],
         plink_out= lambda wildcards, output: output["sexcheck"][:-9],
@@ -109,7 +110,7 @@ rule D_Sex_check:
 
 rule D_Graph_Sex_check:
     input:
-        sexcheck= "results/D_Sex_check/Geno05_SCR.sexcheck"
+        sexcheck= "results/D_Sex_check/VCR_SCR.sexcheck"
     output:
         problem_sex="results/D_Sex_check/sex_check_problem_sex.txt",
         remove_ids="results/D_Sex_check/sex_check_problem_ids.txt",
@@ -129,10 +130,10 @@ rule D_Graph_Sex_check:
 
 rule D_Filter_sex_checked:
     input:
-        infile="results/C_SampleCallrate98/Geno05_SCR.fam",
+        infile="results/C_SampleCallrate/VCR_SCR.fam",
         remove_ids="results/D_Sex_check/sex_check_problem_ids.txt",
     output:
-        outfile="results/D_Sex_check/Geno05_SCRSex_checked.fam",
+        outfile="results/D_Sex_check/VCR_SCRSex_checked.fam",
     params:
         infile=lambda wildcards, input: input["infile"][:-4],
         outfile= lambda wildcards, output: output["outfile"][:-4],
@@ -148,10 +149,10 @@ rule D_Filter_sex_checked:
 
 rule E_Get_heterozygosity:
     input:
-        "results/D_Sex_check/Geno05_SCRSex_checked.fam"
+        "results/D_Sex_check/VCR_SCRSex_checked.fam"
     output:
-        cases="results/E_Get_heterozygosity/Geno05_SCRSex_checked_cases.het",
-        conts="results/E_Get_heterozygosity/Geno05_SCRSex_checked_controls.het",
+        cases="results/E_Get_heterozygosity/VCR_SCRSex_checked_cases.het",
+        conts="results/E_Get_heterozygosity/VCR_SCRSex_checked_controls.het",
     params:
         conts=lambda wildcards, output: output["conts"][:-4],
         infile=lambda wildcards, input: input[0][:-4],
@@ -174,10 +175,10 @@ rule E_Get_heterozygosity:
 
 rule E_Check_heterozygosity:
     input:
-        cases="results/E_Get_heterozygosity/Geno05_SCRSex_checked_cases.het",
-        conts="results/E_Get_heterozygosity/Geno05_SCRSex_checked_controls.het",
+        cases="results/E_Get_heterozygosity/VCR_SCRSex_checked_cases.het",
+        conts="results/E_Get_heterozygosity/VCR_SCRSex_checked_controls.het",
     output:
-        exclude_list="results/E_Get_heterozygosity/Geno05_SCRSex_checked_het_exclude.txt",
+        exclude_list="results/E_Get_heterozygosity/VCR_SCRSex_checked_het_exclude.txt",
         graph_cases="results/E_Get_heterozygosity/Het_check_Fcoeff_cases_hist.pdf",
         graph_controls="results/E_Get_heterozygosity/Het_check_Fcoeff_controls_hist.pdf",
     params:
@@ -198,11 +199,11 @@ rule E_Check_heterozygosity:
 
 rule E_Filter_het_samples:
     input:
-        exclude_list="results/E_Get_heterozygosity/Geno05_SCRSex_checked_het_exclude.txt",
-        infile= "results/D_Sex_check/Geno05_SCRSex_checked.fam",
+        exclude_list="results/E_Get_heterozygosity/VCR_SCRSex_checked_het_exclude.txt",
+        infile= "results/D_Sex_check/VCR_SCRSex_checked.fam",
     output:
         remove_ids="results/E_Get_heterozygosity/het_exclude_ids.txt",
-        outfile="results/E_Get_heterozygosity/Geno05_SCRSex_checked_het.fam",
+        outfile="results/E_Get_heterozygosity/VCR_SCRSex_checked_het.fam",
     params:
         infile=lambda wildcards, input: input["infile"][:-4],
         outfile= lambda wildcards, output: output["outfile"][:-4],
@@ -219,11 +220,11 @@ rule E_Filter_het_samples:
         """
 
 
-rule F_VariantCallrate98:
+rule F_VariantCallrate2:
     input:
-        "results/E_Get_heterozygosity/Geno05_SCRSex_checked_het.fam",
+        "results/E_Get_heterozygosity/VCR_SCRSex_checked_het.fam",
     output:
-        "results/F_VariantCallrate98/Geno05_SCRSex_checked_het_VCR.fam",
+        "results/F_VariantCallrate2/VCR_SCRSex_checked_het_VCR.fam",
     params:
         infile=lambda wildcards, input: input[0][:-4],
         outfile=lambda wildcards, output: output[0][:-4],
@@ -241,15 +242,15 @@ rule F_VariantCallrate98:
 
 rule G_Get_MissDiff_HWE:
     input:
-        fam="results/F_VariantCallrate98/Geno05_SCRSex_checked_het_VCR.fam",
+        fam="results/F_VariantCallrate2/VCR_SCRSex_checked_het_VCR.fam",
     output:
-        case= "results/G_MissDiff_HWE/Geno05_SCRSex_checked_het_VCR_case.lmiss",
-        con= "results/G_MissDiff_HWE/Geno05_SCRSex_checked_het_VCR_con.lmiss",
-        all= "results/G_MissDiff_HWE/Geno05_SCRSex_checked_het_VCR_all.hwe",
-        female= "results/G_MissDiff_HWE/Geno05_SCRSex_checked_het_VCR_female.hwe",
+        case= "results/G_MissDiff_HWE/VCR_SCRSex_checked_het_VCR_case.lmiss",
+        con= "results/G_MissDiff_HWE/VCR_SCRSex_checked_het_VCR_con.lmiss",
+        all= "results/G_MissDiff_HWE/VCR_SCRSex_checked_het_VCR_all.hwe",
+        female= "results/G_MissDiff_HWE/VCR_SCRSex_checked_het_VCR_female.hwe",
     params:
         infile=lambda wildcards, input: input["fam"][:-4],
-        outfile_prefix="results/G_MissDiff_HWE/Geno05_SCRSex_checked_het_VCR" ,
+        outfile_prefix="results/G_MissDiff_HWE/VCR_SCRSex_checked_het_VCR" ,
     conda: "envs/plink.yaml"
     shell:
         """
@@ -282,10 +283,10 @@ rule G_Get_MissDiff_HWE:
 
 rule G_Check_MissDiff_HWE:
     input:    
-        miss_case="results/G_MissDiff_HWE/Geno05_SCRSex_checked_het_VCR_case.lmiss",
-        miss_cont="results/G_MissDiff_HWE/Geno05_SCRSex_checked_het_VCR_con.lmiss",
-        hwe_all="results/G_MissDiff_HWE/Geno05_SCRSex_checked_het_VCR_all.hwe",
-        hwe_female="results/G_MissDiff_HWE/Geno05_SCRSex_checked_het_VCR_female.hwe",
+        miss_case="results/G_MissDiff_HWE/VCR_SCRSex_checked_het_VCR_case.lmiss",
+        miss_cont="results/G_MissDiff_HWE/VCR_SCRSex_checked_het_VCR_con.lmiss",
+        hwe_all="results/G_MissDiff_HWE/VCR_SCRSex_checked_het_VCR_all.hwe",
+        hwe_female="results/G_MissDiff_HWE/VCR_SCRSex_checked_het_VCR_female.hwe",
     output:
         "results/G_MissDiff_HWE/remove_missingness_hwe.txt",
     params:
@@ -310,10 +311,10 @@ rule G_Check_MissDiff_HWE:
         
 rule G_Filter_MissDiff_HWE:
     input:
-        fam="results/F_VariantCallrate98/Geno05_SCRSex_checked_het_VCR.fam",
+        fam="results/F_VariantCallrate2/VCR_SCRSex_checked_het_VCR.fam",
         miss_list="results/G_MissDiff_HWE/remove_missingness_hwe.txt",
     output:
-        "results/G_MissDiff_HWE/Geno05_SCRSex_checked_het_VCR_MiHwe.fam",
+        "results/G_MissDiff_HWE/VCR_SCRSex_checked_het_VCR_MiHwe.fam",
     params:
         infile=lambda wildcards, input: input[0][:-4],
         outfile=lambda wildcards, output: output[0][:-4],
@@ -329,9 +330,9 @@ rule G_Filter_MissDiff_HWE:
 
 rule H_Change_ID_for_1000G_PCA:
     input:
-        fam="results/G_MissDiff_HWE/Geno05_SCRSex_checked_het_VCR_MiHwe.fam"
+        fam="results/G_MissDiff_HWE/VCR_SCRSex_checked_het_VCR_MiHwe.fam"
     output:
-        "results/H_1000G_PCA/Geno05_SCRSex_checked_het_VCR_MiHwe_new_IDs.fam"
+        "results/H_1000G_PCA/VCR_SCRSex_checked_het_VCR_MiHwe_new_IDs.fam"
     params:
         infile=lambda wildcards, input: input[0][:-4],
         outfile=lambda wildcards, output: output[0][:-4],
@@ -367,7 +368,7 @@ elif config["genome_ref"]["version"]=="b38":
 
 rule H_Prepare_1000G_for_ancestry_PCA_step2:
     input:
-        fam="results/H_1000G_PCA/Geno05_SCRSex_checked_het_VCR_MiHwe_new_IDs.fam",
+        fam="results/H_1000G_PCA/VCR_SCRSex_checked_het_VCR_MiHwe_new_IDs.fam",
         vcf="results/H_1000G_PCA/H_step1/1000G_chr{contig}.bcf",
     output:
         variant_list="results/H_1000G_PCA/H_step2/1000G_chr{contig}.vars",
@@ -409,7 +410,7 @@ rule H_Prepare_1000G_for_ancestry_PCA_step2:
 rule H_Merge_data_w_1000G_run_PCA_step3:
     input:
         _1000G_data=expand("results/H_1000G_PCA/H_step2/1000G_chr{contig}_pruned.bed", contig=config["contigs_wo_X"]), 
-        fam="results/H_1000G_PCA/Geno05_SCRSex_checked_het_VCR_MiHwe_new_IDs.fam",
+        fam="results/H_1000G_PCA/VCR_SCRSex_checked_het_VCR_MiHwe_new_IDs.fam",
         ped_file_1000G="resources/H_1000G/H_ped/20130606_g1k.ped"
     output:
         merge_list="results/H_1000G_PCA/H_step3/merge_list.txt",
@@ -489,7 +490,7 @@ rule H_Run_pca_filter:
 
 rule H_Filter_plink_for_ancestry:
     input:
-        fam="results/G_MissDiff_HWE/Geno05_SCRSex_checked_het_VCR_MiHwe.fam",
+        fam="results/G_MissDiff_HWE/VCR_SCRSex_checked_het_VCR_MiHwe.fam",
         europ_include="results/H_1000G_PCA/H_PCA_filter/eur_ids.txt",
     output:
         keep_fam="results/H_1000G_PCA/H_PCA_filter/non_europ_excluded.fam",
@@ -515,8 +516,8 @@ rule I_Kinship_analysis:
     input:
         fam="results/H_1000G_PCA/H_PCA_filter/cohort_eur.fam",
     output:
-        kinship_file1="results/I_Kinship_analysis/Geno05_CR_sex_snp_qc_snpqc2_EUR.kin",
-        kinship_file2="results/I_Kinship_analysis/Geno05_CR_sex_snp_qc_snpqc2_EUR.kin0",
+        kinship_file1="results/I_Kinship_analysis/VCR_CR_sex_snp_qc_snpqc2_EUR.kin",
+        kinship_file2="results/I_Kinship_analysis/VCR_CR_sex_snp_qc_snpqc2_EUR.kin0",
     params:
         plink_in=lambda wildcards, input: input["fam"][:-4],
         out_folder="results/I_Kinship_analysis",
@@ -535,8 +536,8 @@ rule I_Kinship_analysis:
 rule I_kinship_analysis_R:
     input:
         fam="results/H_1000G_PCA/H_PCA_filter/cohort_eur.fam",
-        kinship_file1="results/I_Kinship_analysis/Geno05_CR_sex_snp_qc_snpqc2_EUR.kin",
-        kinship_file2="results/I_Kinship_analysis/Geno05_CR_sex_snp_qc_snpqc2_EUR.kin0",
+        kinship_file1="results/I_Kinship_analysis/VCR_CR_sex_snp_qc_snpqc2_EUR.kin",
+        kinship_file2="results/I_Kinship_analysis/VCR_CR_sex_snp_qc_snpqc2_EUR.kin0",
     output:
         kinship_keep="results/I_Kinship_analysis/keep_ids.fam",
     params:
@@ -622,7 +623,7 @@ rule I_Kinship_check2_R:
 
 rule I_kinship_scatter_plot:
     input:
-        kinship1="results/I_Kinship_analysis/Geno05_CR_sex_snp_qc_snpqc2_EUR.kin0",
+        kinship1="results/I_Kinship_analysis/VCR_CR_sex_snp_qc_snpqc2_EUR.kin0",
         kinship2="results/I_Kinship_analysis/last_check_kinship.kin0"
     output:
         html= "results/I_Kinship_analysis/kinship_plot.html"

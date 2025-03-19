@@ -49,7 +49,7 @@ input_plink: "path/to/your/input_files/files.fam"
 genome_ref:
     version: b37 or b38
 ```
-An example data set can be found here: https://uni-bonn.sciebo.de/s/4jdQGESb92jCaze/download?path=%2Fexample_genotype&files=example_genotype.zip
+An toy data set is located within the folder example_data to test if the pipeline is working in principle.
 
 As mentioned earlier, the input files for this pipeline are genotype data in .bim, .bed, and .fam formats, with sex information and case/control status already included as phenotypes.
 
@@ -68,7 +68,7 @@ snakemake --cores 1 --use-conda --conda-frontend conda
 ```
 
 ### 4. Output
-All output directories and their corresponding snakemake rules have a capital letter as prefix (A-Z). The following steps are conducted:
+All output directories and their corresponding snakemake rules have a capital letter as prefix (A-Z) to separate the corresponding steps:
 - A_Prepare_correct_x
 - B_VariantCallrate1 
 - C_SampleCallrate 

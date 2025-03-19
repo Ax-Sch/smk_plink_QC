@@ -1,6 +1,7 @@
 configfile: '././config/config.yaml'
 
 rule all_pca38:
+    priority: -1
     input:
         expand("results/H_1000G_PCA/H_step1/1000G_chr{contig}.bcf",contig=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
                                                      11, 12, 13, 14, 15, 16, 17, 18,
@@ -23,6 +24,7 @@ rule H_Download_chromosomes:
         """
 
 rule H_Download_fasta_files:
+    priority: -1
     output:
         "resources/H_1000G/H_Fasta/GRCh38_full_analysis_set_plus_decoy_hla.dict",
         "resources/H_1000G/H_Fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa.fai",
@@ -40,6 +42,7 @@ rule H_Download_fasta_files:
         """
 
 rule H_Prepare_1000G_for_ancestry_PCA_step1:
+    priority: -1
     input:
         vcf1000G=config["location_1000G"]+ "ALL.chr{contig}.shapeit2_integrated_v1a.GRCh38.20181129.phased.vcf.gz",
         fasta="resources/H_1000G/H_Fasta/GRCh38_full_analysis_set_plus_decoy_hla.fa"

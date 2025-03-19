@@ -17,7 +17,7 @@ library(rmarkdown)
 #opt <- parse_args(pt_parser)
 
 # Read the sex check file
-sexcheck_data <- read.table("Geno05_SCR.sexcheck",, header = TRUE)
+sexcheck_data <- read.table("VCR_SCR.sexcheck",, header = TRUE)
 
 # Extract rows with "PROBLEM" in the STATUS column
 problem_sex_info <- subset(sexcheck_data, STATUS == "PROBLEM")

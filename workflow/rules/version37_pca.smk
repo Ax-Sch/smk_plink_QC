@@ -1,6 +1,7 @@
 configfile: '././config/config.yaml'
 
 rule all_pca37:
+    priority: -1
     input:
         expand("results/H_1000G_PCA/H_step1/1000G_chr{contig}.bcf",contig=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
                                                      11, 12, 13, 14, 15, 16, 17, 18,
@@ -9,6 +10,7 @@ rule all_pca37:
         "resources/H_1000G/H_Fasta/human_g1k_v37.fasta.fai",
 
 rule H_Download_1000G_chromosomes:
+    priority: -1
     output:
         bcf1000G= config["location_1000G"]+"ALL.chr{contig}.phase3_shapeit2_mvncall_integrated_v5.20130502.genotypes.bcf",
         bcf1000G_csi="resources/H_1000G/H_Genotypes/ALL.chr{contig}.phase3_shapeit2_mvncall_integrated_v5.20130502.genotypes.bcf.csi",
@@ -22,6 +24,7 @@ rule H_Download_1000G_chromosomes:
         """
 
 rule H_Download_fasta_files:
+    priority: -1
     output:
         "resources/H_1000G/H_Fasta/README.human_g1k_v37.fasta.txt",
         "resources/H_1000G/H_Fasta/human_g1k_v37.fasta.fai",
@@ -37,6 +40,7 @@ rule H_Download_fasta_files:
         """
 
 rule H_Unzip_fasta:
+    priority: -1
     input:
         fasta_gz="resources/H_1000G/H_Fasta/human_g1k_v37.fasta.gz"
     output:
@@ -50,6 +54,7 @@ rule H_Unzip_fasta:
 
 
 rule H_Prepare_1000G_for_ancestry_PCA_step1:
+    priority: -1
     input:
         bcf1000G=config["location_1000G"]+"ALL.chr{contig}.phase3_shapeit2_mvncall_integrated_v5.20130502.genotypes.bcf",
         fasta="resources/H_1000G/H_Fasta/human_g1k_v37.fasta"
