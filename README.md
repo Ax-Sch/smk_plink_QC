@@ -70,7 +70,7 @@ snakemake --cores 1 --use-conda --conda-frontend conda
 ### 4. Output
 All output directories and their corresponding snakemake rules have a capital letter as prefix (A-Z). The following steps are conducted:
 - A_Prepare_correct_x
-- B_Genotyping 
+- B_VariantCallrate1 
 - C_SampleCallrate 
 - D_Filter_sex_checked 
 - D_Graph_Sex_check
@@ -78,7 +78,7 @@ All output directories and their corresponding snakemake rules have a capital le
 - E_Check_heterozygosity 
 - E_Filter_het_samples 
 - E_Get_heterozygosity 
-- F_VariantCallrate
+- F_VariantCallrate2 
 - G_Check_MissDiff_HWE 
 - G_Filter_MissDiff_HWE
 - G_Get_MissDiff_HWE 
