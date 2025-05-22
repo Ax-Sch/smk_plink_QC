@@ -520,16 +520,19 @@ rule I_Kinship_analysis:
         kinship_file2="results/I_Kinship_analysis/VCR_CR_sex_snp_qc_snpqc2_EUR.kin0",
     params:
         plink_in=lambda wildcards, input: input["fam"][:-4],
-        out_folder="results/I_Kinship_analysis",
         prefix=lambda wildcards, output: output["kinship_file1"][:-4],
     conda: "envs/king.yaml"
     shell:
         """
-        mkdir -p {params.out_folder}
         king \
         -b {params.plink_in}.bed \
         --kinship \
         --prefix {params.prefix}
+        
+        # if there are no families with multiple members - just copy .kin0 to .kin
+        if [ ! -f "{output.kinship_file1}" ]; then
+           cp "{output.kinship_file2}" "{output.kinship_file1}"
+        fi
         """       
 
 
@@ -580,10 +583,8 @@ rule I_Kinship_check2:
     output:
         kinship_file1="results/I_Kinship_analysis/last_check_kinship.kin",
         kinship_file2="results/I_Kinship_analysis/last_check_kinship.kin0",
-
     params:
         plink_in=lambda wildcards, input: input["fam"][:-4],
-        out_folder="results/I_Kinship_analysis",
         prefix=lambda wildcards, output: output["kinship_file1"][:-4],
     conda: "envs/king.yaml"
     shell:
@@ -592,6 +593,11 @@ rule I_Kinship_check2:
         -b {params.plink_in}.bed \
         --kinship \
         --prefix {params.prefix}
+        
+        # if there are no families with multiple members - just copy .kin0 to .kin
+        if [ ! -f "{output.kinship_file1}" ]; then
+           cp "{output.kinship_file2}" "{output.kinship_file1}"
+        fi
         """
         
 rule I_Kinship_check2_R:
