@@ -4,11 +4,10 @@ library(plotly)
 library(dplyr)
 library(rmarkdown)
 
-
 #kinship_data_1_path<- "results/kinship/Geno05_CR_sex_snp_qc_snpqc2_EUR.kin0"
 #kinship_data_2_path<- "results/kinship/last_check_kinship.kin0"
 # Load the kinship files (paths provided by Snakemake)
-kinship_data_1_path= "Geno05_CR_sex_snp_qc_snpqc2_EUR.kin0"
+kinship_data_1_path= "VCR_CR_sex_snp_qc_snpqc2_EUR.kin0"
 kinship_data_2_path= "last_check_kinship.kin0"
 output_graphs_path= "kinship_scatter_plots.html"
 kinship_data_1 <- read.table(file=kinship_data_1_path, header = TRUE)
@@ -34,3 +33,6 @@ p2_interactive <- ggplotly(p2, tooltip = "text")
 
 # Display both interactive plots
 subplot(p1_interactive, p2_interactive, nrows = 1, titleX = TRUE, titleY = TRUE)
+
+ggsave("kinship_plot1.pdf", plot = p1, width = 6, height = 5)
+ggsave("kinship_plot2.pdf", plot = p2, width = 6, height = 5)
